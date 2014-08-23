@@ -18,9 +18,8 @@ end
 function game:update(dt)
 	self.manager:update(dt)
 
-	local mx, my = self.camera:mousepos()
 	local px, py = self.player.position:unpack()
-	self.camera:lookAt((mx+px) / 2, (my+py) / 2)
+	self.camera:lookAt(px, py)
 end
 
 function game:draw()

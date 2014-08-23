@@ -13,10 +13,7 @@ function love.load()
 end
 
 function love.draw()
-	-- love.graphics.push()
-		-- love.graphics.scale(scaleFactor, scaleFactor)
-		StateManager.draw()
-	-- love.graphics.pop()
+	StateManager.draw()
 
 	love.graphics.setColor(255, 255, 255)
 	love.graphics.print(tostring(love.timer.getFPS( )), 10, 10)

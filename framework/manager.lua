@@ -68,12 +68,12 @@ function Manager:draw()
 		object:draw()
 	end
 
-	--[[
-	love.graphics.setColor(255, 255, 255)
-	for object in self.collider:activeShapes() do
-		object:draw()
+	if false then
+		love.graphics.setColor(255, 255, 255)
+		for object in self.collider:activeShapes() do
+			object:draw()
+		end
 	end
-	]]--
 end
 
 return Manager
