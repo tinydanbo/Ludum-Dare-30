@@ -1,0 +1,214 @@
+======================================
+Simple Tiled Implementation Change Log
+======================================
+-------------------
+2014-08-05 : v0.7.5
+-------------------
+* Fixed:	Properties offset by 1
+* Fixed:	Drawing a single Layer can now use Layer's name/index
+
+-------------------
+2014-04-28 : v0.7.4
+-------------------
+* Fixed:	Canvas resize type
+
+-------------------
+2014-04-18 : v0.7.3
+-------------------
+* Fixed:	Canvas using wrong filter
+
+-------------------
+2014-04-08 : v0.7.2
+-------------------
+* Removed:	Dependency for LuaJIT's bitwise operations
+
+-------------------
+2014-04-08 : v0.7.1
+-------------------
+* Added:	Map:resize(w, h)
+* Changed:	Map:draw() now takes two optional arguments: ScaleX and ScaleY
+* Changed:	STI now draws to a Canvas before drawing to screen (fixes scaling oddities)
+
+-------------------
+2014-04-07 : v0.7.0
+-------------------
+* Added:	Files for Corona and Pure Lua implementation
+* Changed:	Restructured sti.lua into several files
+* Changed:	Library is now LOVE agnostic and should allow for implementation of other frameworks
+
+--------------------
+2014-03-11 : v0.6.16
+--------------------
+* Changed:	Ellipses now use polygons instead of... Not polygons.
+
+--------------------
+2014-03-11 : v0.6.15
+--------------------
+* Fixed:	Tile spacing calculated properly in all cases
+
+--------------------
+2014-02-02 : v0.6.14
+--------------------
+* Fixed:	Tile properties ACTUALLY being added now!
+
+--------------------
+2014-01-29 : v0.6.13
+--------------------
+* Added:	Missing Tile Flag
+
+--------------------
+2014-01-29 : v0.6.12
+--------------------
+* Added:	drawCollisionMap() now supports Isometric and Staggered maps
+* Changed:	drawCollisionMap() now requires a collision map parameter
+* Changed:	setCollisionMap() renamed to getCollisionMap()
+* Changed:	getCollisionMap() now returns the collision map
+* Fixed:	Tile properties not being added
+* Removed:	Map.collision table removed
+
+--------------------
+2014-01-26 : v0.6.11
+--------------------
+* Added:	Descriptive error messages
+* Fixed:	Image filters for scaling
+
+--------------------
+2014-01-25 : v0.6.10
+--------------------
+* Fixed:	Optimized load time
+
+-------------------
+2014-01-25 : v0.6.9
+-------------------
+* Fixed:	Parallax Scrolling
+
+-------------------
+2014-01-25 : v0.6.8
+-------------------
+* Changed:	Revised and restructured code
+* Changed:	createCollisionMap() renamed to setCollisionMap()
+* Changed:	newCustomLayer() renamed to addCustomLayer()
+
+-------------------
+2014-01-24 : v0.6.7
+-------------------
+* Fixed:	Number of tiles wasn't calculated properly
+
+-------------------
+2014-01-24 : v0.6.6
+-------------------
+* Fixed:	Spacing wasn't calculated properly
+
+-------------------
+2014-01-24 : v0.6.5
+-------------------
+* Added:	Staggered Maps
+
+-------------------
+2014-01-24 : v0.6.4
+-------------------
+* Added:	Isometric Maps
+
+-------------------
+2014-01-20 : v0.6.3
+-------------------
+* Added:	Tile Flags (flip/rotation)
+
+-------------------
+2014-01-20 : v0.6.2
+-------------------
+* Fixed:	A scaling bug
+
+-------------------
+2014-01-19 : v0.6.1
+-------------------
+* Fixed:	A bug causing the Collision Map to be nil
+
+-------------------
+2014-01-19 : v0.6.0
+-------------------
+* Added:	Sprite Batches
+
+-------------------
+2014-01-19 : v0.5.0
+-------------------
+* Added:	Draw Range optimization
+
+-------------------
+2014-01-18 : v0.4.3
+-------------------
+* Added:	Layer draw offsets
+
+-------------------
+2014-01-17 : v0.4.2
+-------------------
+* Changed:	Organized library a little better
+
+-------------------
+2014-01-17 : v0.4.1
+-------------------
+* Fixed:	Tiles incorrectly offset
+* Fixed:	Drawing concave polygons
+
+-------------------
+2014-01-17 : v0.4.0
+-------------------
+* Added:	Draw Object Layers
+
+-------------------
+2014-01-16 : v0.3.3
+-------------------
+* Added:	Create new Custom Layer
+* Added:	Callbacks for all layers
+* Added:	Remove Layer
+* Changed:	Simplified sti.new()
+
+-------------------
+2014-01-16 : v0.3.2
+-------------------
+* Fixed:	Crash if using Tiled 0.9.1
+* Changed:	Map structure to remove "map" table
+
+-------------------
+2014-01-16 : v0.3.1
+-------------------
+* Added:	Update callback to Custom Layers
+
+-------------------
+2014-01-16 : v0.3.0
+-------------------
+* Added:	Support for converting layers to Custom Layers
+* Changed:	sti.new() no longer requires the file extension
+
+-------------------
+2014-01-15 : v0.2.2
+-------------------
+* Added:	Support for basic collision layer
+
+-------------------
+2014-01-15 : v0.2.1
+-------------------
+* Added:	Support for map instances
+* Added:	Name alias to layer indices
+* Changed:	Sandboxed map environment
+* Changed:	Data structures are more efficient
+* Removed:	Unnecessary update function
+
+Thanks to JarrettBillingsley for many of these changes
+
+-------------------
+2014-01-14 : v0.2.0
+-------------------
+* Fixed:	Drawing Tile Offset
+* Changed:	Tile Layer data structure is more efficient
+* Changed:	Simplified Quad generation
+
+-------------------
+2014-01-14 : v0.1.0
+-------------------
+* Initial Commit
+* Added:	Orthogonal Map support
+* Added:	Draw Tile Layers
+* Added:	Draw Image Layers
+* Added:	Ignore Hidden Layers
+* Added:	Layer Opacity
