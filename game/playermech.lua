@@ -128,8 +128,25 @@ function PlayerMech:update(dt)
 		end
 	end
 
+	local x,y = self.position:unpack()
+
 	if not self.grounded then
 		if self.dy < -100 then
+			local boostsmoke = Particle(
+				"circle",
+				x+math.random(-8, 8),
+				y+math.random(-8, 8),
+				math.random(-4, 4),
+				math.random(-4, 4),
+				math.random(1, 3),
+				255,
+				255,
+				255,
+				200,
+				200
+			)
+			boostsmoke.draworder = 1
+			self.manager:addParticle(boostsmoke)
 			if self.dx > 0 then
 				self.currentAnim = self.jumpRightAnim
 			elseif self.dx < 0 then
