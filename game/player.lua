@@ -8,6 +8,7 @@ Player = Class{__includes = Entity,
 	init = function(self, x, y)
 		Entity.init(self, x, y)
 		self.type = "player"
+		self.active = true
 		self.movespeed = 150
 		self.gravity = 10
 		self.dy = 0
@@ -111,56 +112,60 @@ end
 
 function Player:update(dt)
 	self.weapon:update(dt)
-	self:updateAimDirection()
+	if self.active then
+		self:updateAimDirection()
+	end
 	self:checkIsGrounded()
 
 	local desiredDirection = Vector(0, 0)
-	if love.keyboard.isDown("a", "left") then
-		desiredDirection.x = -1
-		self.facingLeft = true
-		if self.aimDirection.y == -1 then
-			self.currentAnim = self.runLeftAimUpAnim
-		elseif self.aimDirection.y == 1 then
-			self.currentAnim = self.runLeftAimDownAnim
-		else
-			self.currentAnim = self.runLeftAnim
-		end
-	elseif love.keyboard.isDown("d", "right") then
-		desiredDirection.x = 1
-		self.facingLeft = false
-		if self.aimDirection.y == -1 then
-			self.currentAnim = self.runRightAimUpAnim
-		elseif self.aimDirection.y == 1 then
-			self.currentAnim = self.runRightAimDownAnim
-		else
-			self.currentAnim = self.runRightAnim
-		end
-	else
-		if self.facingLeft then
+	if self.active then
+		if love.keyboard.isDown("a", "left") then
+			desiredDirection.x = -1
+			self.facingLeft = true
 			if self.aimDirection.y == -1 then
-				self.currentAnim = self.standLeftAimUpAnim
+				self.currentAnim = self.runLeftAimUpAnim
 			elseif self.aimDirection.y == 1 then
-				self.currentAnim = self.standLeftAimDownAnim
+				self.currentAnim = self.runLeftAimDownAnim
 			else
-				self.currentAnim = self.standLeftAnim
+				self.currentAnim = self.runLeftAnim
+			end
+		elseif love.keyboard.isDown("d", "right") then
+			desiredDirection.x = 1
+			self.facingLeft = false
+			if self.aimDirection.y == -1 then
+				self.currentAnim = self.runRightAimUpAnim
+			elseif self.aimDirection.y == 1 then
+				self.currentAnim = self.runRightAimDownAnim
+			else
+				self.currentAnim = self.runRightAnim
 			end
 		else
-			if self.aimDirection.y == -1 then
-				self.currentAnim = self.standRightAimUpAnim
-			elseif self.aimDirection.y == 1 then
-				self.currentAnim = self.standRightAimDownAnim
+			if self.facingLeft then
+				if self.aimDirection.y == -1 then
+					self.currentAnim = self.standLeftAimUpAnim
+				elseif self.aimDirection.y == 1 then
+					self.currentAnim = self.standLeftAimDownAnim
+				else
+					self.currentAnim = self.standLeftAnim
+				end
 			else
-				self.currentAnim = self.standRightAnim
+				if self.aimDirection.y == -1 then
+					self.currentAnim = self.standRightAimUpAnim
+				elseif self.aimDirection.y == 1 then
+					self.currentAnim = self.standRightAimDownAnim
+				else
+					self.currentAnim = self.standRightAnim
+				end
 			end
 		end
 	end
 
-	if love.keyboard.isDown(" ") and self.grounded then
+	if love.keyboard.isDown(" ") and self.active and self.grounded then
 		self.dy = -180
 		self.grounded = false
 	end
 
-	if love.keyboard.isDown("j", "z") then
+	if love.keyboard.isDown("j", "z") and self.active then
 		self.weapon:fire()
 	end
 
@@ -234,7 +239,13 @@ end
 function Player:draw()
 	local x,y = self.position:unpack()
 
-	love.graphics.setColor(255, 255, 255)
+	if self.active then
+		love.graphics.setColor(255, 255, 255)
+	else
+		love.graphics.setColor(180, 100, 100)
+	end
+
+	-- "yikes"
 	if self.currentAnim == self.runRightAimUpAnim or
 		self.currentAnim == self.runLeftAimUpAnim or 
 		self.currentAnim == self.standLeftAimUpAnim or

@@ -22,6 +22,11 @@ function Manager:onCollision(dt, shape_a, shape_b, mtv_x, mtv_y)
 			shape_a.entity:onGrounded()
 		end
 		shape_a.entity:move(Vector(mtv_x, mtv_y))
+	elseif shape_a.entity.type == "playermech" and shape_b.entity.type == "solid" then
+		if mtv_y < 0 then
+			shape_a.entity:onGrounded()
+		end
+		shape_a.entity:move(Vector(mtv_x, mtv_y))
 	elseif shape_a.entity.type == "playerbullet" and shape_b.entity.type == "solid" then
 		-- self.collider:remove(shape_a)
 		-- shape_a.entity:destroy()
@@ -30,6 +35,11 @@ end
 
 function Manager:addEntity(entity)
 	entity.manager = self
+
+	if not entity.draworder then
+		entity.draworder = 3
+	end
+	
 	entity:registerCollisionData(self.collider)
 	table.insert(self.entities, entity)
 end
@@ -81,9 +91,14 @@ function Manager:draw()
 		love.graphics.rectangle("fill", object.l, object.t, object.w, object.h)
 	end
 
+
 	love.graphics.setColor(255, 255, 255)
-	for _, object in ipairs(self.entities) do
-		object:draw()
+	for i=1,5,1 do
+		for _, object in ipairs(self.entities) do
+			if object.draworder == i then
+				object:draw()
+			end
+		end
 	end
 
 	if false then
