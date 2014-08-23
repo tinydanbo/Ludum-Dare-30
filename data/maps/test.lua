@@ -345,6 +345,28 @@ return {
           height = 16,
           visible = true,
           properties = {}
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 368,
+          y = 320,
+          width = 16,
+          height = 16,
+          visible = true,
+          properties = {}
+        },
+        {
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 336,
+          y = 224,
+          width = 32,
+          height = 16,
+          visible = true,
+          properties = {}
         }
       }
     }

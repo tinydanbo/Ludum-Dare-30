@@ -1,4 +1,5 @@
 Camera = require "lib.hump.camera"
+Vector = require "lib.hump.vector"
 Manager = require "framework.manager"
 Player = require "game.player"
 
@@ -12,14 +13,29 @@ function game:enter(oldState)
 
 	local cx, cy = self.player.position:unpack()
 	self.camera = Camera(cx, cy)
-	self.camera:zoom(3, 3)
+	self.desiredCameraPosition = Vector(cx, cy)
+	self.cameraSpeed = 600
+	self.camera:zoom(2, 2)
 end
 
 function game:update(dt)
 	self.manager:update(dt)
 
 	local px, py = self.player.position:unpack()
-	self.camera:lookAt(px, py)
+	if self.player.facingLeft then
+		self.desiredCameraPosition = Vector(px-50, py-40)
+	else
+		self.desiredCameraPosition = Vector(px+50, py-40)
+	end
+
+	local cx, cy = self.camera:pos()
+	local cameraDifference = Vector(cx - self.desiredCameraPosition.x, cy - self.desiredCameraPosition.y)
+	if cameraDifference:len() < (self.cameraSpeed * dt) then
+		self.camera:lookAt(self.desiredCameraPosition.x, self.desiredCameraPosition.y)
+	else
+		local cameraMove = cameraDifference:normalized() * (self.cameraSpeed * dt)
+		self.camera:move(-cameraMove.x, -cameraMove.y)
+	end
 end
 
 function game:draw()

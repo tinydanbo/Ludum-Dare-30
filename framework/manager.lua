@@ -22,6 +22,9 @@ function Manager:onCollision(dt, shape_a, shape_b, mtv_x, mtv_y)
 			shape_a.entity:onGrounded()
 		end
 		shape_a.entity:move(Vector(mtv_x, mtv_y))
+	elseif shape_a.entity.type == "playerbullet" then
+		self.collider:remove(shape_a)
+		shape_a.entity:destroy()
 	end
 end
 
@@ -44,14 +47,24 @@ function Manager:loadMap(filename)
 			h = object.height
 		}
 		local solidCollide = self.collider:addRectangle(solid.l, solid.t, solid.w, solid.h)
+		solidCollide.entity = {
+			type = "solid"
+		}
 		self.collider:setPassive(solidCollide)
 		table.insert(self.solids, solid)
 	end
 end
 
 function Manager:update(dt)
-	for _, object in ipairs(self.entities) do
-		object:update(dt)
+	local i = 1
+	local entityTable = self.entities
+	while i <= #entityTable do
+		entityTable[i]:update(dt)
+		if entityTable[i].isDestroyed then
+			table.remove(self.entities, i)
+		else
+			i = i + 1
+		end
 	end
 
 	self.collider:update(dt)

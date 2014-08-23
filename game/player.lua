@@ -2,6 +2,7 @@ Class = require "lib.hump.class"
 Vector = require "lib.hump.vector"
 Anim8 = require "lib.anim8"
 Entity = require "framework.entity"
+MachineGun = require "game.weapons.pilot.machinegun"
 
 Player = Class{__includes = Entity,
 	init = function(self, x, y)
@@ -12,6 +13,7 @@ Player = Class{__includes = Entity,
 		self.dy = 0
 		self.grounded = false
 		self.facingLeft = false
+		self.weapon = MachineGun(self)
 		self.spriteGrid = Anim8.newGrid(
 			64, 64, 
 			self.spriteSheet:getWidth(), self.spriteSheet:getHeight()
@@ -42,6 +44,8 @@ Player = Class{__includes = Entity,
 }
 
 function Player:update(dt)
+	self.weapon:update(dt)
+
 	local desiredDirection = Vector(0, 0)
 	if love.keyboard.isDown("a", "left") then
 		desiredDirection.x = -1
@@ -60,8 +64,12 @@ function Player:update(dt)
 	end
 
 	if love.keyboard.isDown(" ") and self.grounded then
-		self.dy = -280
+		self.dy = -360
 		self.grounded = false
+	end
+
+	if love.keyboard.isDown("j", "z") then
+		self.weapon:fire()
 	end
 
 	if not self.grounded then
