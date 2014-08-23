@@ -29,7 +29,11 @@ function Particle:draw()
 	local x, y = self.position:unpack()
 
 	love.graphics.setColor(self.r, self.g, self.b, self.a)
-	love.graphics.circle("fill", x, y, self.size)
+	if self.style == "circle" then
+		love.graphics.circle("fill", x, y, self.size)
+	elseif self.style == "square" then
+		love.graphics.rectangle("fill", x-self.size, y-self.size, self.size*2, self.size*2)
+	end
 end
 
 return Particle

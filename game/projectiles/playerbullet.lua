@@ -35,7 +35,7 @@ function PlayerBasicBullet:draw()
 		self.firstFrame = false
 	else
 		love.graphics.setColor(255, 255, 255)
-		love.graphics.draw(self.image, self.quad, x, y, 0, 1, 1, 8, 8)
+		love.graphics.draw(self.image, self.quad, x, y, 0, 1.5, 1.5, 8, 8)
 	end
 end
 

@@ -23,7 +23,7 @@ function game:enter(oldState)
 	local cx, cy = self.player.position:unpack()
 	self.camera = Camera(cx, cy)
 	self.desiredCameraPosition = Vector(cx, cy)
-	self.cameraSpeed = 500
+	self.cameraSpeed = 400
 	self.camera:zoomTo(scaleFactor)
 end
 
