@@ -14,19 +14,14 @@ function game:enter(oldState)
 	local cx, cy = self.player.position:unpack()
 	self.camera = Camera(cx, cy)
 	self.desiredCameraPosition = Vector(cx, cy)
-	self.cameraSpeed = 600
+	self.cameraSpeed = 500
 	self.camera:zoom(2, 2)
 end
 
 function game:update(dt)
 	self.manager:update(dt)
 
-	local px, py = self.player.position:unpack()
-	if self.player.facingLeft then
-		self.desiredCameraPosition = Vector(px-50, py-40)
-	else
-		self.desiredCameraPosition = Vector(px+50, py-40)
-	end
+	self.desiredCameraPosition = self.player:getDesiredCameraPosition()
 
 	local cx, cy = self.camera:pos()
 	local cameraDifference = Vector(cx - self.desiredCameraPosition.x, cy - self.desiredCameraPosition.y)

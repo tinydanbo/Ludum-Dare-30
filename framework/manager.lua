@@ -17,14 +17,14 @@ Manager = Class {
 }
 
 function Manager:onCollision(dt, shape_a, shape_b, mtv_x, mtv_y)
-	if shape_a.entity.type == "player" then
+	if shape_a.entity.type == "player" and shape_b.entity.type == "solid" then
 		if mtv_y < 0 then
 			shape_a.entity:onGrounded()
 		end
 		shape_a.entity:move(Vector(mtv_x, mtv_y))
-	elseif shape_a.entity.type == "playerbullet" then
-		self.collider:remove(shape_a)
-		shape_a.entity:destroy()
+	elseif shape_a.entity.type == "playerbullet" and shape_b.entity.type == "solid" then
+		-- self.collider:remove(shape_a)
+		-- shape_a.entity:destroy()
 	end
 end
 
@@ -32,6 +32,11 @@ function Manager:addEntity(entity)
 	entity.manager = self
 	entity:registerCollisionData(self.collider)
 	table.insert(self.entities, entity)
+end
+
+function Manager:addParticle(particle)
+	particle.manager = self
+	table.insert(self.entities, particle)
 end
 
 function Manager:loadMap(filename)

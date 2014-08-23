@@ -23,24 +23,23 @@ function MachineGun:fire()
 		love.audio.play(self.shotSound)
 
 		local px, py = self.player.position:unpack()
+		local offset = self.player:getFireOffset()
+		local bulletVelocity = self.player.aimDirection:normalized() * 360
 
-		if self.player.facingLeft then
-			local bullet = PlayerBasicBullet(self.player, px-12, py+3, -360, math.random(-20, 20))
-			local muzzleFlash = Particle("circle", px-12, py+3, 0, 0, 4, 255, 200, 0, 255, 1000)
-			self.player.manager:addEntity(bullet)
-			self.player.manager:addEntity(muzzleFlash)
-		else
-			local bullet = PlayerBasicBullet(self.player, px+12, py+3, 360, math.random(-20, 20))
-			local muzzleFlash = Particle("circle", px+12, py+3, 0, 0, 4, 255, 200, 0, 255, 1000)
-			self.player.manager:addEntity(bullet)
-			self.player.manager:addEntity(muzzleFlash)
-		end
+		-- if the player is currently moving, add their velocity to that of the bullet
+		bulletVelocity = bulletVelocity + self.player.velocity
 
-		if self.player.facingLeft then
-			self.player:move(Vector(2, -1))
-		else
-			self.player:move(Vector(-2, -1))
-		end
+		bulletVelocity.x = bulletVelocity.x + math.random(-30, 30)
+		bulletVelocity.y = bulletVelocity.y + math.random(-30, 30)
+
+		local bullet = PlayerBasicBullet(
+			self.player, 
+			px + offset.x + self.player.aimDirection:normalized().x * 4, 
+			py + offset.y + self.player.aimDirection:normalized().y * 4, 
+			bulletVelocity.x, 
+			bulletVelocity.y
+		)
+		self.player.manager:addEntity(bullet)
 	end
 end
 
