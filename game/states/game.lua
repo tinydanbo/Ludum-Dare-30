@@ -29,6 +29,9 @@ function game:enter(oldState)
 	self.cameraSpeed = 400
 	self.camera:zoomTo(scaleFactor)
 
+	self.background = love.graphics.newImage("data/graphics/Background WIP Test.png")
+	self.background:setFilter("nearest", "nearest")
+
 	local gameState = self
 	Timer.addPeriodic(0.15, function()
 		local popcorn = PopcornEnemy(-500, math.random(-256, 256))
@@ -81,8 +84,11 @@ function game:handleRescale(scaleFactor)
 end
 
 function game:draw()
-	love.graphics.setColor(100, 150, 200)
-	love.graphics.rectangle("fill", 0, 0, love.window.getWidth(), love.window.getHeight())
+	love.graphics.push()
+		love.graphics.scale(scaleFactor, scaleFactor)
+		love.graphics.draw(self.background, 0, 0)
+	love.graphics.pop()
+	
 	self.camera:attach()
 		self.manager:draw()
 	self.camera:detach()
