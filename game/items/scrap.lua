@@ -9,6 +9,8 @@ ScrapMetal = Class{__includes = Entity,
 		self.type = "item"
 		self.draworder = 4
 		self.size = size
+		self.lived = 0
+		self.lifetime = 10
 		self.frozen = false
 		self.velocity = Vector(math.random(-300, 300), math.random(-80, -50))
 		self.spriteSheet:setFilter("nearest", "nearest")
@@ -32,6 +34,10 @@ function ScrapMetal:update(dt)
 	if not self.frozen then
 		self.velocity.y = self.velocity.y + 10
 		self:move(self.velocity * dt)
+	end
+	self.lived = self.lived + dt
+	if self.lived > self.lifetime then
+		self:destroy()
 	end
 end
 

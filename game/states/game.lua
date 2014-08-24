@@ -33,12 +33,14 @@ function game:enter(oldState)
 	self.background:setFilter("nearest", "nearest")
 
 	local gameState = self
+	--[[
 	Timer.addPeriodic(0.15, function()
 		local popcorn = PopcornEnemy(-500, math.random(-256, 256))
 		self.manager:addEntity(popcorn)
 	end)
+	]]
 	Timer.addPeriodic(1, function()
-		local ball = BallEnemy(1024, math.random(-128, 128), math.random(-30, -20))
+		local ball = BallEnemy(1024, math.random(-128, 128), math.random(-60, -50))
 		self.manager:addEntity(ball)
 	end)
 end
@@ -88,10 +90,13 @@ function game:draw()
 		love.graphics.scale(scaleFactor, scaleFactor)
 		love.graphics.draw(self.background, 0, 0)
 	love.graphics.pop()
-	
+
 	self.camera:attach()
 		self.manager:draw()
 	self.camera:detach()
+
+	love.graphics.setColor(255, 255, 255)
+	love.graphics.print(tostring(self.manager.count), 40, 0)
 end
 
 function game:getActivePlayer()

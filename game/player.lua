@@ -14,6 +14,7 @@ Player = Class{__includes = Entity,
 		self.gravity = 10
 		self.dy = 0
 		self.grounded = false
+		self.firing = false
 		self.facingLeft = false
 		self.aimDirection = Vector(1, 0)
 		self.velocity = Vector(0, 0)
@@ -162,7 +163,10 @@ function Player:update(dt)
 	end
 
 	if love.keyboard.isDown("j", "z") and self.active then
+		self.firing = true
 		self.weapon:fire()
+	else
+		self.firing = false
 	end
 
 	if not self.grounded then

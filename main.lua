@@ -6,7 +6,8 @@ gameState = require "game.states.game" -- haha lol
 scaleFactor = 1
 
 function love.load()
-	love.window.setMode(240*scaleFactor, 160*scaleFactor)
+	love.window.setMode(240*4, 160*4)
+	-- love.window.setMode(240*scaleFactor, 160*scaleFactor)
 	love.graphics.setDefaultFilter("nearest", "nearest")
 	StateManager.registerEvents({'update', 'keypressed'})
 	StateManager.switch(gameState)

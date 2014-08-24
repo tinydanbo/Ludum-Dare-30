@@ -7,6 +7,7 @@ Manager = Class {
 	init = function(self)
 		self.entities = {}
 		self.solids = {}
+		self.count = 0
 		local man = self
 		self.collider = HC(100, function(dt, shape_a, shape_b, mtv_x, mtv_y)
 			man:onCollision(dt, shape_a, shape_b, mtv_x, mtv_y)
@@ -33,12 +34,12 @@ function Manager:onCollision(dt, shape_a, shape_b, mtv_x, mtv_y)
 	elseif shape_a.entity.type == "playerbullet" and shape_b.entity.type == "enemy" then
 		shape_b.entity:onHitBy(shape_a.entity)
 		if not shape_b.entity.burning then
-			shape_a.entity:destroy()
+			shape_a.entity:onHit()
 		end
 	elseif shape_a.entity.type == "enemy" and shape_b.entity.type == "playerbullet" then
 		shape_a.entity:onHitBy(shape_b.entity)
 		if not shape_a.entity.burning then
-			shape_b.entity:destroy()
+			shape_b.entity:onHit()
 		end
 	elseif shape_a.entity.type == "playermech" and shape_b.entity.type == "enemy" then
 		shape_b.entity:move(Vector(-mtv_x, -mtv_y))
@@ -61,6 +62,7 @@ function Manager:onCollision(dt, shape_a, shape_b, mtv_x, mtv_y)
 end
 
 function Manager:addEntity(entity)
+	self.count = self.count + 1
 	entity.manager = self
 
 	if not entity.draworder then
@@ -72,6 +74,7 @@ function Manager:addEntity(entity)
 end
 
 function Manager:addParticle(particle)
+	self.count = self.count + 1
 	particle.manager = self
 	if not particle.draworder then
 		particle.draworder = 5
@@ -107,6 +110,7 @@ function Manager:update(dt)
 		entityTable[i]:update(dt)
 		if entityTable[i].isDestroyed then
 			table.remove(self.entities, i)
+			self.count = self.count - 1
 		else
 			i = i + 1
 		end

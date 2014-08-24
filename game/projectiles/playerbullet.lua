@@ -1,6 +1,7 @@
 Class = require "lib.hump.class"
 Vector = require "lib.hump.vector"
 Entity = require "framework.entity"
+PlayerBulletImpact = require "game.fx.playerbulletimpact"
 
 PlayerBasicBullet = Class {__includes = Entity,
 	init = function(self, player, x, y, dx, dy)
@@ -10,6 +11,8 @@ PlayerBasicBullet = Class {__includes = Entity,
 		self.image:setFilter("nearest", "nearest")
 		self.player = player
 		self.firstFrame = true
+		self.lived = 0
+		self.lifetime = 3
 		self.damage = 1
 	end,
 	image = love.graphics.newImage("data/graphics/bullet_pilot.png"),
@@ -23,7 +26,20 @@ function PlayerBasicBullet:registerCollisionData(collider)
 	self.hitbox.entity = self
 end
 
+function PlayerBasicBullet:onHit()
+	local impact = PlayerBulletImpact(
+		self.position.x,
+		self.position.y
+	)
+	self.manager:addParticle(impact)
+	self:destroy()
+end
+
 function PlayerBasicBullet:update(dt)
+	self.lived = self.lived + dt
+	if self.lived > self.lifetime then
+		self:destroy()
+	end
 	self:move(self.velocity * dt)
 end
 
