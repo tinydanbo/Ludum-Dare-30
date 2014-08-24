@@ -2,6 +2,7 @@ Class = require "lib.hump.class"
 Vector = require "lib.hump.vector"
 Anim8 = require "lib.anim8"
 Entity = require "framework.entity"
+Particle = require "game.fx.particle"
 MachineGun = require "game.weapons.pilot.machinegun"
 
 Player = Class{__includes = Entity,
@@ -222,6 +223,24 @@ end
 function Player:onGrounded()
 	self.dy = 0
 	self.grounded = true
+end
+
+function Player:onCollect(item)
+	local ix, iy = item.position:unpack()
+	local particle = Particle(
+		"square",
+		ix,
+		iy,
+		0,
+		-10,
+		item.size,
+		255,
+		255,
+		255,
+		255,
+		1000
+	)
+	self.manager:addParticle(particle)
 end
 
 function Player:registerCollisionData(collider)

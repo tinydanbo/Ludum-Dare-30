@@ -46,6 +46,17 @@ function Manager:onCollision(dt, shape_a, shape_b, mtv_x, mtv_y)
 	elseif shape_a.entity.type == "enemy" and shape_b.entity.type == "playermech" then
 		shape_a.entity:move(Vector(mtv_x, mtv_y))
 		shape_a.entity:onHitBy(shape_b.entity)
+	elseif shape_a.entity.type == "item" and shape_b.entity.type == "solid" then
+		shape_a.entity:move(Vector(mtv_x, mtv_y))
+		if mtv_y < 0 then
+			shape_a.entity:freeze()
+		end
+	elseif shape_a.entity.type == "item" and shape_b.entity.type == "player" then
+		shape_b.entity:onCollect(shape_a.entity)
+		shape_a.entity:destroy()
+	elseif shape_a.entity.type == "player" and shape_b.entity.type == "item" then
+		shape_a.entity:onCollect(shape_b.entity)
+		shape_b.entity:destroy()
 	end
 end
 
@@ -120,7 +131,7 @@ function Manager:draw()
 		end
 	end
 
-	if true then
+	if false then
 		love.graphics.setColor(255, 255, 255)
 		for object in self.collider:activeShapes() do
 			object:draw()

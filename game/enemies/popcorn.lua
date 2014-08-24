@@ -5,6 +5,7 @@ Anim8 = require "lib.anim8"
 Entity = require "framework.entity"
 Explosion = require "game.fx.explosion"
 Particle = require "game.fx.particle"
+ScrapMetal = require "game.items.scrap"
 
 PopcornEnemy = Class{__includes = Entity,
 	init = function(self, x, y)
@@ -62,7 +63,7 @@ function PopcornEnemy:update(dt)
 		self.burningdy = self.burningdy + 10
 		self:move(Vector(self.burningdx, self.burningdy) * dt)
 	else
-		local diff = target.position - self.position
+		local diff = target.position + Vector(0, -32) - self.position
 		self:move(diff:normalized() * (self.speed * dt))
 	end
 	self.flyingAnim:update(dt)
@@ -95,6 +96,12 @@ function PopcornEnemy:explode()
 		math.random(16, 24)
 	)
 	self.manager:addParticle(explosion)
+	local scrap = ScrapMetal(
+		self.position.x+math.random(-4, 4),
+		self.position.y+math.random(-4, 4),
+		math.random(1, 5)
+	)
+	self.manager:addEntity(scrap)
 	Gamestate.current():screenShake(5, self.position)
 	self:destroy()
 end
