@@ -141,7 +141,7 @@ function Manager:draw()
 		end
 	end
 
-	if true then
+	if false then
 		love.graphics.setColor(255, 255, 255)
 		for object in self.collider:activeShapes() do
 			object:draw()

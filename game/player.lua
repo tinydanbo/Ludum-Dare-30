@@ -78,6 +78,11 @@ Player = Class{__includes = Entity,
 		), 0.1)
 		self.jumpLeftAnim = self.jumpRightAnim:clone():flipH()
 
+		self.jumpRightAimUpAnim = Anim8.newAnimation(self.spriteGrid2(
+			4, 1
+		), 0.1)
+		self.jumpLeftAimUpAnim = self.jumpRightAimUpAnim:clone():flipH()
+
 		self.currentAnim = self.standRightAnim
 	end,
 	spriteSheet = love.graphics.newImage("data/graphics/player_pilot.png"),
@@ -189,9 +194,17 @@ function Player:update(dt)
 
 	if not self.grounded then
 		if self.facingLeft then
-			self.currentAnim = self.jumpLeftAnim
+			if self.aimDirection.y == -1 then
+				self.currentAnim = self.jumpLeftAimUpAnim
+			else
+				self.currentAnim = self.jumpLeftAnim
+			end
 		else
-			self.currentAnim = self.jumpRightAnim
+			if self.aimDirection.y == -1 then
+				self.currentAnim = self.jumpRightAimUpAnim
+			else
+				self.currentAnim = self.jumpRightAnim
+			end
 		end
 	end
 
@@ -299,7 +312,9 @@ function Player:draw()
 		self.currentAnim == self.runLeftAimDownAnim or
 		self.currentAnim == self.runRightAimDownAnim or
 		self.currentAnim == self.standRightAimDownAnim or
-		self.currentAnim == self.standLeftAimDownAnim then
+		self.currentAnim == self.standLeftAimDownAnim or
+		self.currentAnim == self.jumpRightAimUpAnim or
+		self.currentAnim == self.jumpLeftAimUpAnim then
 		self.currentAnim:draw(self.spriteSheet2, x, y, 0, 1, 1, 32, 32)
 	else
 		self.currentAnim:draw(self.spriteSheet, x, y, 0, 1, 1, 32, 32)
