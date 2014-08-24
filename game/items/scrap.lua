@@ -43,7 +43,6 @@ end
 
 function ScrapMetal:registerCollisionData(collider)
 	local x,y = self.position:unpack()
-	print("ey")
 
 	self.hitbox = collider:addRectangle(x-2, y-3, 4, 3)
 	self.hitbox.entity = self

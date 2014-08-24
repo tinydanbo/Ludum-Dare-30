@@ -4,6 +4,7 @@ Vector = require "lib.hump.vector"
 Timer = require "lib.hump.timer"
 Anim8 = require "lib.anim8"
 Entity = require "framework.entity"
+EnemyBasicBullet = require "game.projectiles.enemybullet"
 
 BallEnemy = Class{__includes = Entity,
 	init = function(self, x, y, dx)
@@ -101,7 +102,8 @@ function BallEnemy:update(dt)
 		if difference:len() < 80 then
 			self.state = "watch"
 			self.currentAnim = self.watchingLeftAnim
-			self.timer:addPeriodic(0.8, function()
+			self.timer:addPeriodic(1.6, function()
+				self.currentAnim = self.attackingLeftAnim
 				self.timer:add(0.1, function()
 					self:fireAtPlayer()
 				end)
@@ -110,6 +112,9 @@ function BallEnemy:update(dt)
 				end)
 				self.timer:add(0.3, function()
 					self:fireAtPlayer()
+				end)
+				self.timer:add(0.4, function()
+					self.currentAnim = self.watchingLeftAnim
 				end)
 			end)
 		end
@@ -135,7 +140,21 @@ function BallEnemy:update(dt)
 end
 
 function BallEnemy:fireAtPlayer()
-	print("ey")
+	local speed = 140
+	local bulletDirection = Vector(
+		math.cos(self.rotation + math.rad(math.random(115, 125))),
+		math.sin(self.rotation + math.rad(math.random(115, 125)))
+	)
+
+	local bullet = EnemyBasicBullet(
+		self,
+		self.position.x + (bulletDirection.x * 16),
+		self.position.y + (bulletDirection.y * 16),
+		speed * bulletDirection.x,
+		speed * bulletDirection.y
+	)
+	bullet.draworder = 5
+	self.manager:addEntity(bullet)
 end
 
 function BallEnemy:registerCollisionData(collider)
@@ -154,7 +173,7 @@ function BallEnemy:draw()
 	else
 		love.graphics.setColor(255, 255, 255, 255)
 	end
-	self.currentAnim:draw(self.spriteSheet, x, y, self.rotation, 1, 1, 32, 32)
+	self.currentAnim:draw(self.spriteSheet, x, y, self.rotation, 1, 1, 32, 36)
 end
 
 return BallEnemy
