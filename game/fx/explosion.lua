@@ -9,7 +9,14 @@ Explosion = Class {__includes = Entity,
 		self.frame = 0
 		self.alpha = 255
 		self.decay = 1000
-	end
+
+		local sound = self.sounds[1]
+		sound:rewind()
+		sound:play()
+	end,
+	sounds = {
+		love.audio.newSource("data/sfx/explosion_1.wav", "static")
+	}
 }
 
 function Explosion:update(dt)

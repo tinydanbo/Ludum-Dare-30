@@ -13,6 +13,8 @@ Player = Class{__includes = Entity,
 		self.movespeed = 150
 		self.gravity = 10
 		self.dy = 0
+		self.health = 100
+		self.maxhealth = 100
 		self.grounded = false
 		self.firing = false
 		self.facingLeft = false
@@ -110,6 +112,10 @@ end
 
 function Player:getDesiredCameraPosition()
 	return self.position
+end
+
+function Player:onHitBy(projectile)
+
 end
 
 function Player:update(dt)

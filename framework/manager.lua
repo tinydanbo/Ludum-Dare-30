@@ -58,6 +58,12 @@ function Manager:onCollision(dt, shape_a, shape_b, mtv_x, mtv_y)
 	elseif shape_a.entity.type == "player" and shape_b.entity.type == "item" then
 		shape_a.entity:onCollect(shape_b.entity)
 		shape_b.entity:destroy()
+	elseif shape_a.entity.type == "player" and shape_b.entity.type == "enemybullet" then
+		shape_b.entity:destroy()
+		shape_a.entity:onHitBy(shape_b.entity)
+	elseif shape_a.entity.type == "enemybullet" and shape_b.entity.type == "player" then
+		shape_a.entity:destroy()
+		shape_b.entity:onHitBy(shape_a.entity)
 	end
 end
 

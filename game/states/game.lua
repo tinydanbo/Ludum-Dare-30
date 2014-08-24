@@ -6,6 +6,7 @@ Player = require "game.player"
 PlayerMech = require "game.playermech"
 PopcornEnemy = require "game.enemies.popcorn"
 BallEnemy = require "game.enemies.ball"
+Hud = require "game.fx.hud"
 
 local game = {}
 
@@ -20,6 +21,8 @@ function game:enter(oldState)
 	self.player.draworder = 2
 	self.player.mech = self.playermech
 	self.player.draworder = 4
+
+	self.hud = Hud(self)
 
 	self.manager:loadMap("test")
 
@@ -55,13 +58,20 @@ function game:update(dt)
 	local cx, cy = self.camera:pos()
 	local cameraDifference = Vector(cx - self.desiredCameraPosition.x, cy - self.desiredCameraPosition.y)
 	if cameraDifference:len() < (self.cameraSpeed * dt) then
-		self.camera:lookAt(self.desiredCameraPosition.x, self.desiredCameraPosition.y)
+		self.camera:lookAt(
+			math.floor(self.desiredCameraPosition.x), 
+			math.floor(self.desiredCameraPosition.y)
+		)
 	else
 		local cameraMove = cameraDifference:normalized() * (self.cameraSpeed * dt)
-		self.camera:move(-cameraMove.x, -cameraMove.y)
+		self.camera:move(
+			math.floor(-cameraMove.x), 
+			math.floor(-cameraMove.y)
+		)
 	end
 
 	self.manager:update(dt)
+	self.hud:update(dt)
 	Timer.update(dt)
 end
 
@@ -88,6 +98,7 @@ end
 function game:draw()
 	love.graphics.push()
 		love.graphics.scale(scaleFactor, scaleFactor)
+		love.graphics.setColor(255, 255, 255, 255)
 		love.graphics.draw(self.background, 0, 0)
 	love.graphics.pop()
 
@@ -95,8 +106,11 @@ function game:draw()
 		self.manager:draw()
 	self.camera:detach()
 
-	love.graphics.setColor(255, 255, 255)
-	love.graphics.print(tostring(self.manager.count), 40, 0)
+	love.graphics.push()
+		love.graphics.scale(scaleFactor, scaleFactor)
+		love.graphics.setColor(255, 255, 255, 255)
+		self.hud:draw()
+	love.graphics.pop()
 end
 
 function game:getActivePlayer()
