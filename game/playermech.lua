@@ -4,6 +4,7 @@ Timer = require "lib.hump.timer"
 Anim8 = require "lib.anim8"
 Entity = require "framework.entity"
 Particle = require "game.fx.particle"
+VulcanCannon = require "game.weapons.mech.vulcancannon"
 
 PlayerMech = Class{__includes = Entity,
 	init = function(self, x, y)
@@ -14,6 +15,7 @@ PlayerMech = Class{__includes = Entity,
 		self.gravity = 20
 		self.movespeed = 150
 		self.jumppower = 0
+		self.weapon = VulcanCannon(self)
 		self.grounded = false
 		self.jumpchargespeed = 1000
 		self.maxjump = 500
@@ -89,6 +91,7 @@ end
 
 function PlayerMech:update(dt)
 	self:checkIsGrounded()
+	self.weapon:update(dt)
 
 	local desiredDirection = Vector(0, 0)
 	if self.active and not self.locked then
@@ -145,6 +148,10 @@ function PlayerMech:update(dt)
 				self.jumppower = 0
 			end
 		end
+	end
+
+	if love.keyboard.isDown("z", "j") and not self.locked then
+		self.weapon:fire()
 	end
 
 	local x,y = self.position:unpack()
@@ -251,6 +258,14 @@ function PlayerMech:keyreleased(key, code)
 			self.locked = false
 			self.gravity = 20
 		end)
+	end
+end
+
+function PlayerMech:getFireOffset()
+	if self.facingLeft then
+		return self:getArmOffset() + Vector(-26, -4)
+	else
+		return self:getArmOffset() + Vector(26, -4)
 	end
 end
 

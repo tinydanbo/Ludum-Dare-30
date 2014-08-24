@@ -4,7 +4,6 @@ Gamestate = require "lib.hump.gamestate"
 PlayerBasicBullet = require "game.projectiles.playerbullet"
 Particle = require "game.fx.particle"
 
-
 MachineGun = Class {
 	init = function(self, player)
 		self.player = player
