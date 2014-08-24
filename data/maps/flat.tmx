@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="100" height="25" tilewidth="16" tileheight="16">
+ <tileset firstgid="1" source="tileset.tsx"/>
+ <layer name="World" width="100" height="25">
+  <data encoding="base64" compression="zlib">
+   eJzt0zELglAUhuFjai4WLTYU0tQgRlNDi5NT//8P9YmkIiEZylV4H3iHFL3Xc8kMAAAAAAAAAAAAANbrpHZq73ojDsVWz+Ds6PmP6iwy9VKpre9MPOV32vR+VwUq/HJ9TFO8Y2hv3XtPlavbH2tEI2Y1xTdte2sfVEJN5cDsipnXPqrLAmZA7XncF7APqrva/P9B+r2HegPyTiQ2
+  </data>
+ </layer>
+ <objectgroup name="Solids" width="100" height="25">
+  <object x="0" y="320" width="928" height="80"/>
+  <object x="928" y="320" width="176" height="80"/>
+  <object x="1104" y="336" width="96" height="64"/>
+  <object x="1200" y="320" width="400" height="80"/>
+  <object x="848" y="288" width="48" height="32"/>
+  <object x="896" y="304" width="16" height="16"/>
+  <object x="832" y="304" width="16" height="16"/>
+  <object x="544" y="304" width="48" height="16"/>
+  <object x="288" y="304" width="48" height="16"/>
+ </objectgroup>
+</map>

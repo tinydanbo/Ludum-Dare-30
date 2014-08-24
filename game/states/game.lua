@@ -12,9 +12,9 @@ local game = {}
 
 function game:enter(oldState)
 	self.manager = Manager()
-	self.playermech = PlayerMech(512, 0)
+	self.playermech = PlayerMech(512, 256)
 	self.manager:addEntity(self.playermech)
-	self.player = Player(192, 0)
+	self.player = Player(192, 256)
 	self.manager:addEntity(self.player)
 
 	self.playermech.player = self.player
@@ -24,7 +24,7 @@ function game:enter(oldState)
 
 	self.hud = Hud(self)
 
-	self.manager:loadMap("test")
+	self.manager:loadMap("flat")
 
 	local cx, cy = self.player.position:unpack()
 	self.camera = Camera(cx, cy)

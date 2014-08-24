@@ -126,11 +126,8 @@ function Manager:update(dt)
 end
 
 function Manager:draw()
-	love.graphics.setColor(60, 60, 60)
-	for _, object in ipairs(self.solids) do
-		love.graphics.rectangle("fill", object.l, object.t, object.w, object.h)
-	end
 
+	self.map:drawLayer(self.map.layers["World"])
 
 	love.graphics.setColor(255, 255, 255)
 	for i=1,5,1 do

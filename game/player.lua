@@ -120,7 +120,7 @@ function Player:updateAimDirection()
 end
 
 function Player:getDesiredCameraPosition()
-	return self.position
+	return Vector(self.position.x, self.position.y-16)
 end
 
 function Player:onHitBy(projectile)
