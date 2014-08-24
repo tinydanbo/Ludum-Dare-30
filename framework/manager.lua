@@ -30,6 +30,22 @@ function Manager:onCollision(dt, shape_a, shape_b, mtv_x, mtv_y)
 	elseif shape_a.entity.type == "playerbullet" and shape_b.entity.type == "solid" then
 		-- self.collider:remove(shape_a)
 		-- shape_a.entity:destroy()
+	elseif shape_a.entity.type == "playerbullet" and shape_b.entity.type == "enemy" then
+		shape_b.entity:onHitBy(shape_a.entity)
+		if not shape_b.entity.burning then
+			shape_a.entity:destroy()
+		end
+	elseif shape_a.entity.type == "enemy" and shape_b.entity.type == "playerbullet" then
+		shape_a.entity:onHitBy(shape_b.entity)
+		if not shape_a.entity.burning then
+			shape_b.entity:destroy()
+		end
+	elseif shape_a.entity.type == "playermech" and shape_b.entity.type == "enemy" then
+		shape_b.entity:move(Vector(-mtv_x, -mtv_y))
+		shape_b.entity:onHitBy(shape_a.entity)
+	elseif shape_a.entity.type == "enemy" and shape_b.entity.type == "playermech" then
+		shape_a.entity:move(Vector(mtv_x, mtv_y))
+		shape_a.entity:onHitBy(shape_b.entity)
 	end
 end
 
@@ -46,6 +62,9 @@ end
 
 function Manager:addParticle(particle)
 	particle.manager = self
+	if not particle.draworder then
+		particle.draworder = 5
+	end
 	table.insert(self.entities, particle)
 end
 

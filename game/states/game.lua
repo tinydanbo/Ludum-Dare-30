@@ -1,14 +1,16 @@
 Camera = require "lib.hump.camera"
 Vector = require "lib.hump.vector"
+Timer = require "lib.hump.timer"
 Manager = require "framework.manager"
 Player = require "game.player"
 PlayerMech = require "game.playermech"
+PopcornEnemy = require "game.enemies.popcorn"
 
 local game = {}
 
 function game:enter(oldState)
 	self.manager = Manager()
-	self.playermech = PlayerMech(192, 0)
+	self.playermech = PlayerMech(512, 0)
 	self.manager:addEntity(self.playermech)
 	self.player = Player(192, 0)
 	self.manager:addEntity(self.player)
@@ -23,13 +25,17 @@ function game:enter(oldState)
 	local cx, cy = self.player.position:unpack()
 	self.camera = Camera(cx, cy)
 	self.desiredCameraPosition = Vector(cx, cy)
-	self.cameraSpeed = 600
+	self.cameraSpeed = 400
 	self.camera:zoomTo(scaleFactor)
+
+	local gameState = self
+	Timer.addPeriodic(0.15, function()
+		local popcorn = PopcornEnemy(-500, math.random(-256, 256))
+		self.manager:addEntity(popcorn)
+	end)
 end
 
 function game:update(dt)
-	self.manager:update(dt)
-
 	if self.player.active then
 		self.desiredCameraPosition = self.player:getDesiredCameraPosition()
 	elseif self.playermech.active then
@@ -44,6 +50,25 @@ function game:update(dt)
 		local cameraMove = cameraDifference:normalized() * (self.cameraSpeed * dt)
 		self.camera:move(-cameraMove.x, -cameraMove.y)
 	end
+
+	self.manager:update(dt)
+	Timer.update(dt)
+end
+
+function game:screenShake(magnitude, origin)
+	if origin then
+		local cx, cy = self.camera:pos()
+		local distance = Vector(cx, cy) - origin
+		if origin:len() < 128 then
+			magnitude = magnitude * (origin:len() / 128)
+		end
+	end
+
+	if magnitude > 0.1 then
+		local randomVector = Vector(math.random(-10, 10), math.random(-10, 10))
+		local shakeVector = randomVector:normalized() * magnitude
+		self.camera:move(shakeVector.x, shakeVector.y)
+	end
 end
 
 function game:handleRescale(scaleFactor)
@@ -56,6 +81,14 @@ function game:draw()
 	self.camera:attach()
 		self.manager:draw()
 	self.camera:detach()
+end
+
+function game:getActivePlayer()
+	if self.player.active then
+		return self.player
+	else
+		return self.playermech
+	end
 end
 
 function game:keyreleased(key, code)

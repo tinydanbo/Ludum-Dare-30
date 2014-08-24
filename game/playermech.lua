@@ -220,7 +220,6 @@ function PlayerMech:update(dt)
 	self:move(Vector(0, (self.dy * dt)))
 
 	self.currentAnim:update(dt)
-	Timer.update(dt)
 end
 
 function PlayerMech:keyreleased(key, code)

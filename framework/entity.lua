@@ -26,6 +26,9 @@ function Entity:draw()
 end
 
 function Entity:destroy()
+	if self.hitbox then
+		self.manager.collider:remove(self.hitbox)
+	end
 	self.isDestroyed = true
 end
 

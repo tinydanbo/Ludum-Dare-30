@@ -1,13 +1,15 @@
 Class = require "lib.hump.class"
 Vector = require "lib.hump.vector"
+Gamestate = require "lib.hump.gamestate"
 PlayerBasicBullet = require "game.projectiles.playerbullet"
 Particle = require "game.fx.particle"
+
 
 MachineGun = Class {
 	init = function(self, player)
 		self.player = player
 		self.fireCounter = 0
-		self.fireRate = 0.15
+		self.fireRate = 0.12
 		self.shotSound = love.audio.newSource("data/sfx/weapons/pilot_machinegun.wav", "static")
 	end
 }
@@ -22,8 +24,11 @@ function MachineGun:fire()
 		love.audio.rewind(self.shotSound)
 		love.audio.play(self.shotSound)
 
+		-- Gamestate.current():screenShake(1, self.player.position)
+
 		local px, py = self.player.position:unpack()
 		local offset = self.player:getFireOffset()
+		offset = offset + Vector(math.random(-8, 8), math.random(-8, 8))
 		local bulletVelocity = self.player.aimDirection:normalized() * 540
 
 		-- if the player is currently moving, add their velocity to that of the bullet

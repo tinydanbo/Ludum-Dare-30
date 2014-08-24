@@ -10,6 +10,7 @@ PlayerBasicBullet = Class {__includes = Entity,
 		self.image:setFilter("nearest", "nearest")
 		self.player = player
 		self.firstFrame = true
+		self.damage = 1
 	end,
 	image = love.graphics.newImage("data/graphics/bullet_pilot.png"),
 	quad = love.graphics.newQuad(0, 0, 16, 16, 32, 16)
