@@ -19,7 +19,7 @@ PlayerBasicBullet = Class {__includes = Entity,
 function PlayerBasicBullet:registerCollisionData(collider)
 	local x,y = self.position:unpack()
 
-	self.hitbox = collider:addRectangle(x-2, y-2, 4, 4)
+	self.hitbox = collider:addRectangle(x-4, y-4, 8, 8)
 	self.hitbox.entity = self
 end
 

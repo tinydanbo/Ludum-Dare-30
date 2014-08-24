@@ -5,6 +5,7 @@ Manager = require "framework.manager"
 Player = require "game.player"
 PlayerMech = require "game.playermech"
 PopcornEnemy = require "game.enemies.popcorn"
+BallEnemy = require "game.enemies.ball"
 
 local game = {}
 
@@ -29,9 +30,15 @@ function game:enter(oldState)
 	self.camera:zoomTo(scaleFactor)
 
 	local gameState = self
+	--[[
 	Timer.addPeriodic(0.15, function()
 		local popcorn = PopcornEnemy(-500, math.random(-256, 256))
 		self.manager:addEntity(popcorn)
+	end)
+	]]--
+	Timer.addPeriodic(1, function()
+		local ball = BallEnemy(1024, math.random(-128, 128), math.random(-30, -20))
+		self.manager:addEntity(ball)
 	end)
 end
 

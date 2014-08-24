@@ -255,6 +255,7 @@ function PlayerMech:keyreleased(key, code)
 end
 
 function PlayerMech:checkIsGrounded()
+	--[[
 	local x,y = self.position:unpack()
 	local isGrounded = false
 
@@ -263,6 +264,7 @@ function PlayerMech:checkIsGrounded()
 			isGrounded = true
 		end
 	end
+	--]]
 
 	-- print(isGrounded)
 	-- self.grounded = isGrounded
