@@ -11,7 +11,7 @@ EnemyBasicBullet = Class {__includes = Entity,
 		self.owner = owner
 		self.lived = 0
 		self.lifetime = 3
-		self.damage = 1
+		self.damage = 3
 	end,
 	image = love.graphics.newImage("data/graphics/bullet_enemy.png"),
 	quad = love.graphics.newQuad(0, 0, 16, 16, 80, 32)
@@ -20,7 +20,7 @@ EnemyBasicBullet = Class {__includes = Entity,
 function EnemyBasicBullet:registerCollisionData(collider)
 	local x,y = self.position:unpack()
 
-	self.hitbox = collider:addRectangle(x-4, y-4, 8, 8)
+	self.hitbox = collider:addRectangle(x-3, y-3, 4, 4)
 	self.hitbox.entity = self
 end
 

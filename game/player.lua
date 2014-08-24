@@ -1,5 +1,6 @@
 Class = require "lib.hump.class"
 Vector = require "lib.hump.vector"
+Timer = require "lib.hump.timer"
 Anim8 = require "lib.anim8"
 Entity = require "framework.entity"
 Particle = require "game.fx.particle"
@@ -18,6 +19,7 @@ Player = Class{__includes = Entity,
 		self.grounded = false
 		self.firing = false
 		self.facingLeft = false
+		self.invuln = false
 		self.aimDirection = Vector(1, 0)
 		self.velocity = Vector(0, 0)
 		self.weapon = MachineGun(self)
@@ -79,7 +81,8 @@ Player = Class{__includes = Entity,
 		self.currentAnim = self.standRightAnim
 	end,
 	spriteSheet = love.graphics.newImage("data/graphics/player_pilot.png"),
-	spriteSheet2 = love.graphics.newImage("data/graphics/player_pilot_2.png")
+	spriteSheet2 = love.graphics.newImage("data/graphics/player_pilot_2.png"),
+	whiteShader = love.graphics.newShader("data/shaders/white.fs")
 }
 
 function Player:updateAimDirection()
@@ -115,7 +118,16 @@ function Player:getDesiredCameraPosition()
 end
 
 function Player:onHitBy(projectile)
+	self.health = self.health - projectile.damage
 
+	if self.health < 0 then
+		self.health = 0
+	else
+		self.invuln = true
+		Timer.add(0.02*projectile.damage, function()
+			self.invuln = false
+		end)
+	end
 end
 
 function Player:update(dt)
@@ -256,7 +268,7 @@ end
 function Player:registerCollisionData(collider)
 	local x,y = self.position:unpack()
 
-	self.hitbox = collider:addRectangle(x-4, y-4, 8, 14)
+	self.hitbox = collider:addRectangle(x-3, y-4, 6, 14)
 	self.hitbox.entity = self
 end
 
@@ -272,6 +284,9 @@ function Player:draw()
 
 	if self.active then
 		love.graphics.setColor(255, 255, 255)
+		if self.invuln then
+			love.graphics.setShader(self.whiteShader)
+		end
 	else
 		love.graphics.setColor(180, 100, 100)
 	end
@@ -289,6 +304,8 @@ function Player:draw()
 	else
 		self.currentAnim:draw(self.spriteSheet, x, y, 0, 1, 1, 32, 32)
 	end
+
+	love.graphics.setShader()
 end
 
 return Player
