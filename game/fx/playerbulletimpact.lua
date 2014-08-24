@@ -10,6 +10,7 @@ PlayerBulletImpact = Class {__includes = Entity,
 			32, 32,
 			self.spriteSheet:getWidth(), self.spriteSheet:getHeight()
 		)
+		self.spriteSheet:setFilter("nearest", "nearest")
 
 		self.animation = Anim8.newAnimation(self.spriteGrid(
 			1, 1,
@@ -33,3 +34,5 @@ function PlayerBulletImpact:draw()
 	local x,y  = self.position:unpack()
 	self.animation:draw(self.spriteSheet, x, y, 0, 1, 1, 16, 16)
 end
+
+return PlayerBulletImpact

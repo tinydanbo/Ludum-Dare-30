@@ -3,11 +3,10 @@ io.stdout:setvbuf("no")
 StateManager = require "lib.hump.gamestate"
 gameState = require "game.states.game" -- haha lol
 
-scaleFactor = 1
+scaleFactor = 3
 
 function love.load()
-	love.window.setMode(240*4, 160*4)
-	-- love.window.setMode(240*scaleFactor, 160*scaleFactor)
+	love.window.setMode(240*scaleFactor, 160*scaleFactor)
 	love.graphics.setDefaultFilter("nearest", "nearest")
 	StateManager.registerEvents({'update', 'keypressed'})
 	StateManager.switch(gameState)
