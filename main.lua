@@ -8,7 +8,7 @@ scaleFactor = 3
 function love.load()
 	love.window.setMode(240*scaleFactor, 160*scaleFactor)
 	love.graphics.setDefaultFilter("nearest", "nearest")
-	StateManager.registerEvents({'update'})
+	StateManager.registerEvents({'update', 'keypressed'})
 	StateManager.switch(gameState)
 end
 

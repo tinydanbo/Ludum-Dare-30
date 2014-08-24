@@ -23,7 +23,7 @@ function game:enter(oldState)
 	local cx, cy = self.player.position:unpack()
 	self.camera = Camera(cx, cy)
 	self.desiredCameraPosition = Vector(cx, cy)
-	self.cameraSpeed = 400
+	self.cameraSpeed = 600
 	self.camera:zoomTo(scaleFactor)
 end
 
@@ -69,6 +69,16 @@ function game:keyreleased(key, code)
 			self.player.draworder = 2
 			self.playermech.draworder = 4
 		end
+	end
+
+	if self.playermech.active then
+		self.playermech:keyreleased(key, code)
+	end
+end
+
+function game:keypressed(key, code)
+	if self.player.active then
+		self.player:keypressed(key, code)
 	end
 end
 

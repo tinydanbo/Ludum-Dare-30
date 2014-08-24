@@ -160,11 +160,6 @@ function Player:update(dt)
 		end
 	end
 
-	if love.keyboard.isDown(" ") and self.active and self.grounded then
-		self.dy = -180
-		self.grounded = false
-	end
-
 	if love.keyboard.isDown("j", "z") and self.active then
 		self.weapon:fire()
 	end
@@ -234,6 +229,13 @@ function Player:registerCollisionData(collider)
 
 	self.hitbox = collider:addRectangle(x-4, y-4, 8, 14)
 	self.hitbox.entity = self
+end
+
+function Player:keypressed(key, code)
+	if key == " " and self.active and self.grounded then
+		self.dy = -180
+		self.grounded = false
+	end
 end
 
 function Player:draw()
