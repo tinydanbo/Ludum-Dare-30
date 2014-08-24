@@ -15,7 +15,7 @@ BallEnemy = Class{__includes = Entity,
 		self.draworder = 5
 		self.elapsed = 0
 		self.state = "patrol"
-		self.health = 30
+		self.health = 10
 		self.flashDamage = 0
 		self.rotation = 0
 		self.timer = Timer.new()

@@ -3,7 +3,7 @@ Vector = require "lib.hump.vector"
 Entity = require "framework.entity"
 
 Particle = Class {__includes = Entity,
-	init = function(self, style, x, y, dx, dy, size, r, g, b, a, decay)
+	init = function(self, style, x, y, dx, dy, size, r, g, b, a, decay, sizedecay)
 		Entity.init(self, x, y)
 		self.style = style
 		self.velocity = Vector(dx, dy)
@@ -13,12 +13,19 @@ Particle = Class {__includes = Entity,
 		self.b = b
 		self.a = a
 		self.decay = decay
+
+		if sizedecay then
+			self.sizedecay = sizedecay
+		else
+			self.sizedecay = 0
+		end
 	end
 }
 
 function Particle:update(dt)
 	self.position = self.position + (self.velocity * dt)
 	self.a = self.a - (self.decay * dt)
+	self.size = self.size - (self.sizedecay * dt)
 
 	if self.a < 0 or self.size < 0 then
 		self:destroy()

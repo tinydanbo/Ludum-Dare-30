@@ -36,14 +36,12 @@ function game:enter(oldState)
 	self.background:setFilter("nearest", "nearest")
 
 	local gameState = self
-	--[[
 	Timer.addPeriodic(0.15, function()
 		local popcorn = PopcornEnemy(-500, math.random(-256, 256))
 		self.manager:addEntity(popcorn)
 	end)
-	]]--
-	Timer.addPeriodic(4, function()
-		local ball = BallEnemy(1024, math.random(-32, 32), math.random(-60, -50))
+	Timer.addPeriodic(2, function()
+		local ball = BallEnemy(1024, math.random(-32, 32), math.random(-150, -100))
 		self.manager:addEntity(ball)
 	end)
 end
