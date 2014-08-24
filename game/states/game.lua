@@ -14,7 +14,7 @@ function game:enter(oldState)
 	self.manager = Manager()
 	self.playermech = PlayerMech(512, 256)
 	self.manager:addEntity(self.playermech)
-	self.player = Player(192, 256)
+	self.player = Player(32, 256)
 	self.manager:addEntity(self.player)
 
 	self.playermech.player = self.player
@@ -37,11 +37,18 @@ function game:enter(oldState)
 
 	local gameState = self
 	Timer.addPeriodic(0.15, function()
-		local popcorn = PopcornEnemy(-500, math.random(-256, 256))
+		local popcorn = PopcornEnemy(
+			self.player.position.x+128, 
+			self.player.position.y+math.random(-128, 128)
+		)
 		self.manager:addEntity(popcorn)
 	end)
 	Timer.addPeriodic(2, function()
-		local ball = BallEnemy(1024, math.random(-32, 32), math.random(-150, -100))
+		local ball = BallEnemy(
+			self.player.position.x+128, 
+			self.player.position.y+math.random(-32, 32), 
+			math.random(-150, -100)
+		)
 		self.manager:addEntity(ball)
 	end)
 end

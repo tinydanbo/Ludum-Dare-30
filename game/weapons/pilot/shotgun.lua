@@ -1,8 +1,9 @@
 Class = require "lib.hump.class"
 Vector = require "lib.hump.vector"
 Gamestate = require "lib.hump.gamestate"
-PlayerBasicBullet = require "game.projectiles.playerbullet"
+PlayerShotgunBullet = require "game.projectiles.playershotgunbullet"
 Particle = require "game.fx.particle"
+Sparkle = require "game.fx.sparkle"
 
 Shotgun = Class {
 	init = function(self, player)
@@ -36,19 +37,19 @@ function Shotgun:fire()
 			bulletVelocity.x = bulletVelocity.x + math.random(-40, 40)
 			bulletVelocity.y = bulletVelocity.y + math.random(-40, 40)
 
-			local bullet = PlayerBasicBullet(
+			local bullet = PlayerShotgunBullet(
 				self.player,
 				px + offset.x,
 				py + offset.y,
 				bulletVelocity.x,
-				bulletVelocity.y
+				bulletVelocity.y,
+				math.random(2,3)
 			)
 			self.player.manager:addEntity(bullet)
 		end
 
 		for i=0,4,1 do
 			-- its a ref! haha
-			for i=1,3,1 do
 			local gunsmoke = Particle(
 				"circle",
 				px+offset.x,
@@ -66,7 +67,15 @@ function Shotgun:fire()
 			gunsmoke.draworder = 1
 			self.player.manager:addParticle(gunsmoke)
 		end
-		end
+
+		local sparkle = Sparkle(
+			px+offset.x+math.random(-4, 4),
+			py+offset.y+math.random(-4, 4),
+			self.player.aimDirection.x * math.random(20,30) + self.player.velocity.x,
+			self.player.aimDirection.y * math.random(20,30) + math.random(-20, 20) + self.player.velocity.y
+		)
+		sparkle.draworder = 5
+		self.player.manager:addParticle(sparkle)
 	end
 end
 
