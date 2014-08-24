@@ -22,8 +22,12 @@ PlayerBulletImpact = Class {__includes = Entity,
 		), 0.02, function()
 			self:destroy()
 		end)
+
+		self.sound:rewind()
+		self.sound:play()
 	end,
-	spriteSheet = love.graphics.newImage("data/graphics/Bullet Impact Pilot.png")
+	spriteSheet = love.graphics.newImage("data/graphics/Bullet Impact Pilot.png"),
+	sound = love.audio.newSource("data/sfx/weapons/small_hit.wav")
 }
 
 function PlayerBulletImpact:update(dt)
