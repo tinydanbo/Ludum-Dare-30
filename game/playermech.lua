@@ -112,6 +112,10 @@ function PlayerMech:update(dt)
 
 	if not self.warpingIn and self.active and self.scrappower > 0 then
 		self.scrappower = self.scrappower - 1
+		Gamestate.current().player.health = Gamestate.current().player.health + (10 * dt)
+		if Gamestate.current().player.health > Gamestate.current().player.maxhealth then
+			Gamestate.current().player.health = Gamestate.current().player.maxhealth
+		end
 	end
 
 	self.shinecounter = self.shinecounter + dt

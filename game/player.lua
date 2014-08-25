@@ -95,6 +95,11 @@ Player = Class{__includes = Entity,
 		), 0.1)
 		self.kickLeftAnim = self.kickRightAnim:clone():flipH()
 
+		self.hurtRightAnim = Anim8.newAnimation(self.spriteGrid(
+			5, 2
+		), 0.1)
+		self.hurtLeftAnim = self.hurtRightAnim:clone():flipH()
+
 		self.currentAnim = self.standRightAnim
 	end,
 	spriteSheet = love.graphics.newImage("data/graphics/player_pilot.png"),
@@ -135,10 +140,31 @@ function Player:getDesiredCameraPosition()
 end
 
 function Player:onHitBy(projectile)
+	local oldhealth = self.health
+	local breakpoint = 0
+	while oldhealth > 20 do
+		breakpoint = breakpoint + 20
+		oldhealth = oldhealth - 20
+	end
+
 	self.health = self.health - projectile.damage
 
 	if self.health < 0 then
 		self.health = 0
+	elseif self.health < breakpoint then
+		self.health = breakpoint
+		-- stagger
+		self.locked = true
+		self.invuln = true
+		self.currentAnim = self.hurtRightAnim
+		self.dy = -100
+		self.dx = -100
+		Timer.add(0.5, function()
+			self.invuln = false
+		end)
+		Timer.add(1, function()
+			self.locked = false
+		end)
 	else
 		self.invuln = true
 		Timer.add(0.08*projectile.damage, function()
