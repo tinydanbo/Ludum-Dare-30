@@ -54,7 +54,7 @@ function BattleshipEnemy:onHitBy(entity)
 		self.flashDamage = 2
 	elseif entity.type == "playermech" then
 		local mechspeed = math.abs(entity.dx) + math.abs(entity.dy)
-		if mechspeed > 500 then
+		if mechspeed > 600 then
 			self:move(Vector(math.random(-16, 16), math.random(-16, 16)))
 			self.health = 0
 			entity.dx = entity.dx * 0.8
