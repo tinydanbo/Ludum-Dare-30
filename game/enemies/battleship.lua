@@ -13,6 +13,7 @@ BattleshipEnemy = Class{__includes = Entity,
 		self.solidToPlayer = true
 		self.draworder = 5
 		self.health = 50
+		self.flashDamage = 2
 		self.timer = Timer.new()
 		self.dx = dx
 		self.spriteGrid = Anim8.newGrid(
@@ -37,7 +38,6 @@ BattleshipEnemy = Class{__includes = Entity,
 }
 
 function BattleshipEnemy:fireBullet()
-	print("good")
 	local bullet = EnemyBasicBulletTwo(
 		self,
 		self.position.x + math.random(-5, 5),
@@ -49,11 +49,41 @@ function BattleshipEnemy:fireBullet()
 end
 
 function BattleshipEnemy:onHitBy(entity)
+	if entity.type == "playerbullet" then
+		self.health = self.health - entity.damage
+		self.flashDamage = 2
+	elseif entity.type == "playermech" then
+		local mechspeed = math.abs(entity.dx) + math.abs(entity.dy)
+		if mechspeed > 500 then
+			self:move(Vector(math.random(-16, 16), math.random(-16, 16)))
+			self.health = 0
+			entity.dx = entity.dx * 0.8
+			entity.dy = entity.dy * 0.8
+		end
+	end
 
+	if self.health <= 0 then
+		self:explode()
+	end
 end
 
 function BattleshipEnemy:explode()
-
+	local explosion = Explosion(
+		self.position.x+math.random(-8, 8),
+		self.position.y+math.random(-8, 8),
+		math.random(30, 40)
+	)
+	self.manager:addParticle(explosion)
+	for i=1,30,1 do
+		local scrap = ScrapMetal(
+			self.position.x+math.random(-4, 4),
+			self.position.y+math.random(-4, 4),
+			math.random(3, 5)
+		)
+		self.manager:addEntity(scrap)
+	end
+	Gamestate.current():screenShake(20, self.position)
+	self:destroy()
 end
 
 function BattleshipEnemy:onPilotKicked(pilot)
@@ -79,6 +109,13 @@ end
 
 function BattleshipEnemy:draw()
 	local x,y = self.position:unpack()
+
+	if self.flashDamage > 0 then
+		love.graphics.setColor(255, 0, 0, 255)
+		self.flashDamage = self.flashDamage - 1
+	else
+		love.graphics.setColor(255, 255, 255, 255)
+	end
 
 	self.currentAnim:draw(self.spriteSheet, x, y, self.rotation, 1, 1, 64, 64)
 end

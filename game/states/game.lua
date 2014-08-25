@@ -58,6 +58,16 @@ function game:enter(oldState)
 	)
 
 	local gameState = self
+
+	self.music = love.audio.newSource("data/music/Qygen - Moron Lobe.ogg", "stream")
+	self.music:setLooping(true)
+	self.music:play()
+
+	self.mechaMusic = love.audio.newSource("data/music/Qygen - Moron Lobe (Mecha Theme).ogg", "stream")
+	self.mechaMusic:setVolume(0)
+	self.mechaMusic:setLooping(true)
+	self.mechaMusic:play()
+
 	--[[
 	Timer.addPeriodic(0.15, function()
 		local popcorn = PopcornEnemy(
@@ -184,12 +194,16 @@ function game:keyreleased(key, code)
 		self.player.active = not self.player.active
 		self.playermech.active = not self.playermech.active
 		if self.player.active then
+			self.mechaMusic:setVolume(0)
+			self.music:setVolume(1)
 			local desiredPlayerPosition = Vector(self.playermech.position.x, self.player.position.y)
 			self.player:move(desiredPlayerPosition - self.player.position)
 			self.playermech:warpOut()
 			self.player.draworder = 4
 			self.playermech.draworder = 2
 		else
+			self.mechaMusic:setVolume(1)
+			self.music:setVolume(0)
 			local desiredMechPosition = Vector(self.player.position.x, self.player.position.y)
 			self.playermech:move(desiredMechPosition - self.playermech.position)
 			self.player:warpOut()

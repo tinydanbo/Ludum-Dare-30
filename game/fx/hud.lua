@@ -10,6 +10,7 @@ Hud = Class {__includes = Entity,
 		self.hp:setFilter("nearest", "nearest")
 		self.ammo:setFilter("nearest", "nearest")
 		self.scoreFont:setFilter("nearest", "nearest")
+		self.whiteFont:setFilter("nearest", "nearest")
 		self.healthIconQuad = love.graphics.newQuad(
 			0, 0,
 			11, 11,
@@ -40,7 +41,8 @@ Hud = Class {__includes = Entity,
 	icons = love.graphics.newImage("data/graphics/hud_icons.png"),
 	hp = love.graphics.newImage("data/graphics/hud_hp.png"),
 	ammo = love.graphics.newImage("data/graphics/hud_ammo1.png"),
-	scoreFont = love.graphics.newImageFont("data/graphics/hud_font_Score.png", "1234567890")
+	scoreFont = love.graphics.newImageFont("data/graphics/hud_font_Score.png", "1234567890"),
+	whiteFont = love.graphics.newImageFont("data/graphics/hud_font_white.png", "1234567890")
 }
 
 function Hud:update(dt)
@@ -74,6 +76,11 @@ function Hud:draw()
 
 	love.graphics.setFont(self.scoreFont)
 	love.graphics.print("1234567", 174, hudy+4)
+
+	if self.game.player.active then
+		love.graphics.setFont(self.whiteFont)
+		love.graphics.printf(tostring(self.game.player.scrap), 0, 8, 240, "center")
+	end
 end
 
 return Hud
