@@ -21,6 +21,7 @@ function game:enter(oldState)
 	self.manager:addEntity(self.player)
 	self.slowmo = false
 	self.skipFrame = false
+	self.paused = false
 
 	self.playermech.player = self.player
 	self.player.draworder = 2
@@ -49,6 +50,9 @@ function game:enter(oldState)
 	self.backgroundNearGrid = Anim8.newGrid(240, 160,
 		self.backgroundNear:getWidth(), self.backgroundNear:getHeight()
 	)
+
+	self.pauseScreen = love.graphics.newImage("data/graphics/screen_pause.png")
+	self.pauseScreen:setFilter("nearest", "nearest")
 
 	self.backgroundNearAnimation = Anim8.newAnimation(
 		self.backgroundNearGrid(
@@ -111,6 +115,10 @@ function game:onPlayerDeath()
 end
 
 function game:update(dt)
+	if self.paused then
+		return
+	end
+
 	if self.slowmo then
 		if self.skipFrame then
 			self.skipFrame = false
@@ -219,6 +227,9 @@ function game:draw()
 		love.graphics.scale(scaleFactor, scaleFactor)
 		love.graphics.setColor(255, 255, 255, 255)
 		self.hud:draw()
+		if self.paused then
+			love.graphics.draw(self.pauseScreen, 0, 0)
+		end
 	love.graphics.pop()
 end
 
@@ -231,7 +242,7 @@ function game:getActivePlayer()
 end
 
 function game:keyreleased(key, code)
-	if key == "k" or key == "x" then
+	if key == "v" or key == ";" then
 		if self.player.active and self.player.scrap >= 180 then
 			self.player.active = not self.player.active
 			self.playermech.active = not self.playermech.active
@@ -253,6 +264,10 @@ function game:keyreleased(key, code)
 			self.player.draworder = 2
 			self.playermech.draworder = 4
 		end
+	end
+
+	if key == "escape" then
+		self.paused = not self.paused
 	end
 
 	if self.playermech.active then
