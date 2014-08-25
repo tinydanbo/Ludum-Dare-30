@@ -8,6 +8,8 @@ MachineGun = Class {
 	init = function(self, player)
 		self.player = player
 		self.weapontype = "machinegun"
+		self.ammo = 100
+		self.maxammo = 100
 		self.fireCounter = 0
 		self.fireRate = 0.1
 		self.shotSound = love.audio.newSource("data/sfx/weapons/pilot_machinegun.wav", "static")
@@ -15,6 +17,7 @@ MachineGun = Class {
 }
 
 function MachineGun:update(dt)
+	self.ammo = 100
 	self.fireCounter = self.fireCounter + dt
 end
 

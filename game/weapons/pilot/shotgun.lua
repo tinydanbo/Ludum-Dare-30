@@ -10,6 +10,8 @@ Shotgun = Class {
 		self.player = player
 		self.weapontype = "shotgun"
 		self.fireCounter = 0
+		self.ammo = 60
+		self.maxammo = 60
 		self.fireRate = 0.15
 		self.shotSound = love.audio.newSource("data/sfx/weapons/pilot_shotgun.wav", "static")
 	end
@@ -20,8 +22,9 @@ function Shotgun:update(dt)
 end
 
 function Shotgun:fire()
-	if self.fireCounter > self.fireRate then
+	if self.fireCounter > self.fireRate and self.ammo > 0 then
 		self.fireCounter = 0
+		self.ammo = self.ammo - 1
 		love.audio.rewind(self.shotSound)
 		love.audio.play(self.shotSound)
 

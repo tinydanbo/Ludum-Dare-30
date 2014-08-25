@@ -29,6 +29,17 @@ Hud = Class {__includes = Entity,
 			11, 11,
 			self.icons:getWidth(), self.icons:getHeight()
 		)
+		self.swordIconQuad = love.graphics.newQuad(
+			33, 0,
+			11, 11,
+			self.icons:getWidth(), self.icons:getHeight()
+		)
+		self.spreadIconQuad = love.graphics.newQuad(
+			44, 0,
+			11, 11,
+			self.icons:getWidth(), self.icons:getHeight()
+		)
+
 		self.ammoPipQuad = love.graphics.newQuad(
 			0, 0,
 			2, 5,
@@ -71,9 +82,18 @@ function Hud:draw()
 	end
 	love.graphics.draw(self.hp, self.healthPipQuad, 18+(9*i), hudy+2+2, 0, playerHealth/20, 1, 0, 0)
 
-	love.graphics.draw(self.icons, self.bulletIconQuad, 88, hudy+2)
+	if self.game.player.weapon.weapontype == "machinegun" then
+		love.graphics.draw(self.icons, self.bulletIconQuad, 88, hudy+2)
+	elseif self.game.player.weapon.weapontype == "shotgun" then
+		love.graphics.draw(self.icons, self.spreadIconQuad, 88, hudy+2)
+	elseif self.game.player.weapon.weapontype == "launcher" then
+		love.graphics.draw(self.icons, self.swordIconQuad, 88, hudy+2)
+	end
 
-	for i=0,16,1 do
+	local ammoProportion = self.game.player.weapon.ammo / self.game.player.weapon.maxammo
+	local pips = math.floor(ammoProportion * 16)
+	
+	for i=0,pips,1 do
 		love.graphics.draw(self.ammo, self.ammoPipQuad, 102+(3*i), hudy+2+2)
 	end
 

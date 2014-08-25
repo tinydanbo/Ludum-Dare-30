@@ -185,6 +185,10 @@ function Player:update(dt)
 		self.kickcharge = 100
 	end
 
+	if self.weapon.ammo == 0 then
+		self.weapon = MachineGun(self)
+	end
+
 	local desiredDirection = Vector(0, 0)
 	if self.active and not self.locked then
 		if love.keyboard.isDown("a", "left") then
