@@ -30,6 +30,10 @@ PlayerMech = Class{__includes = Entity,
 		self.invisible = false
 		self.dy = 0
 		self.dx = 0
+		self.armrotation = 0
+		self.maxarmrotation = 0.4
+		self.minarmrotation = -0.4
+		self.armrotationspeed = 3
 		self.facingLeft = false
 		self.spriteGrid = Anim8.newGrid(
 			128, 128,
@@ -122,10 +126,16 @@ function PlayerMech:update(dt)
 	if self.active and not self.locked then
 		if love.keyboard.isDown("a", "left") and self.grounded then
 			desiredDirection.x = -1
+			if not self.facingLeft then
+				self.armrotation = self.armrotation * -1
+			end
 			self.facingLeft = true
 			self.currentAnim = self.walkLeftAnim
 		elseif love.keyboard.isDown("d", "right") and self.grounded then
 			desiredDirection.x = 1
+			if self.facingLeft then
+				self.armrotation = self.armrotation * -1
+			end
 			self.facingLeft = false
 			self.currentAnim = self.walkRightAnim
 		elseif self.grounded then
@@ -193,6 +203,32 @@ function PlayerMech:update(dt)
 				self.jumppower = 0
 			end
 		end
+	end
+
+	if love.keyboard.isDown("w", "up") and self.active and not self.locked then
+		if self.facingLeft then
+			self.armrotation = self.armrotation + (self.armrotationspeed * dt)
+		else
+			self.armrotation = self.armrotation - (self.armrotationspeed * dt)
+		end
+	elseif love.keyboard.isDown("s", "down") and self.active and not self.locked then
+		if self.facingLeft then
+			self.armrotation = self.armrotation - (self.armrotationspeed * dt)
+		else
+			self.armrotation = self.armrotation + (self.armrotationspeed * dt)
+		end
+	else
+		if self.armrotation > 0 then
+			self.armrotation = math.max(0, self.armrotation - (self.armrotationspeed * 0.5 * dt))
+		elseif self.armrotation < 0 then
+			self.armrotation = math.min(0, self.armrotation + (self.armrotationspeed * 0.5 * dt))
+		end
+	end
+
+	if self.armrotation > self.maxarmrotation then
+		self.armrotation = self.maxarmrotation
+	elseif self.armrotation < self.minarmrotation then
+		self.armrotation = self.minarmrotation
 	end
 
 	if love.keyboard.isDown("z", "j") and self.active and not self.locked then
@@ -493,19 +529,23 @@ function PlayerMech:draw()
 	if not self.locked then
 		local armoffset = self:getArmOffset()
 		local sx = 1
+		local armrotation = self.armrotation
+		local xoffset = -5
 		if self.facingLeft then
 			sx = -1
+			xoffset = xoffset * -1
+			armrotation = armrotation * -1
 		end
 		love.graphics.draw(
 			self.armSpriteSheet, 
 			self.armForwardQuad, 
-			x+armoffset.x, 
-			y+armoffset.y, 
-			0, 
+			x+xoffset+armoffset.x, 
+			y-8+armoffset.y, 
+			self.armrotation, 
 			sx, 
 			1, 
-			64+5, 
-			64+8
+			64, 
+			64
 		)
 	end
 end

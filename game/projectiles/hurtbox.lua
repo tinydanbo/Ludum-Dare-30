@@ -29,7 +29,6 @@ end
 
 function HurtBox:update(dt)
 	if self.velocity then
-		print("hi")
 		self:move(self.velocity * dt)
 	end
 

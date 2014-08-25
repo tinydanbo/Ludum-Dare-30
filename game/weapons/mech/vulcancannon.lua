@@ -20,7 +20,7 @@ VulcanCannon = Class {
 			Vector(0, -2)
 		}
 		self.currentFireOffset = 1
-		self.shotSound = love.audio.newSource("data/sfx/weapons/pilot_machinegun.wav", "static")
+		self.shotSound = love.audio.newSource("data/sfx/weapons/vulcan.wav", "static")
 	end
 }
 
@@ -35,29 +35,27 @@ function VulcanCannon:fire()
 		love.audio.play(self.shotSound)
 
 		x, y = self.mech.position:unpack()
-		local offset = self.mech:getFireOffset()
-		offset = offset + self.fireOffsets[self.currentFireOffset]
+		local offset = self.mech:getFireOffset():rotated(self.mech.armrotation)
 
 		self.currentFireOffset = self.currentFireOffset + 1
 		if self.currentFireOffset > #self.fireOffsets then
 			self.currentFireOffset = 1
 		end
 
-		local bulletVelocity = Vector(0, math.random(-10, 10))
+		local bulletVelocity = Vector(math.cos(self.mech.armrotation), math.sin(self.mech.armrotation)) * 300
 
 		if self.mech.facingLeft then
-			bulletVelocity.x = -300
-		else
-			bulletVelocity.x = 300
+			bulletVelocity.x = bulletVelocity.x * -1
+			bulletVelocity.y = bulletVelocity.y * -1
 		end
 
-		bulletVelocity.x = bulletVelocity.x + math.random(-20, 20) + self.mech.dx
-		bulletVelocity.y = bulletVelocity.y + math.random(-20, 20)
+		bulletVelocity.x = bulletVelocity.x + math.random(-40, 40) + self.mech.dx
+		bulletVelocity.y = bulletVelocity.y + math.random(-40, 40)
 
 		local bullet = PlayerVulcanBullet(
 			self.player, 
-			x + offset.x, 
-			y + offset.y, 
+			x+offset.x, 
+			y+offset.y, 
 			bulletVelocity.x, 
 			bulletVelocity.y
 		)
