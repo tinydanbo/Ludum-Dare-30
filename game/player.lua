@@ -139,7 +139,7 @@ function Player:onHitBy(projectile)
 		self.health = 0
 	else
 		self.invuln = true
-		Timer.add(0.02*projectile.damage, function()
+		Timer.add(0.08*projectile.damage, function()
 			self.invuln = false
 		end)
 	end

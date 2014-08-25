@@ -4,7 +4,7 @@ Vector = require "lib.hump.vector"
 Timer = require "lib.hump.timer"
 Anim8 = require "lib.anim8"
 Entity = require "framework.entity"
-EnemyBasicBullet = require "game.projectiles.enemybullet"
+EnemyBasicBulletTwo = require "game.projectiles.enemybullet2"
 
 BattleshipEnemy = Class{__includes = Entity,
 	init = function(self, x, y, dx)
@@ -13,6 +13,7 @@ BattleshipEnemy = Class{__includes = Entity,
 		self.solidToPlayer = true
 		self.draworder = 5
 		self.health = 50
+		self.timer = Timer.new()
 		self.dx = dx
 		self.spriteGrid = Anim8.newGrid(
 			128, 128,
@@ -28,9 +29,24 @@ BattleshipEnemy = Class{__includes = Entity,
 		), 0.2)
 
 		self.currentAnim = self.flyLeftAnim
+		self.timer:addPeriodic(0.1, function()
+			self:fireBullet()
+		end)
 	end,
 	spriteSheet = love.graphics.newImage("data/graphics/enemy_ship.png")
 }
+
+function BattleshipEnemy:fireBullet()
+	print("good")
+	local bullet = EnemyBasicBulletTwo(
+		self,
+		self.position.x + math.random(-5, 5),
+		self.position.y,
+		math.random(-40, 40),
+		math.random(100, 160)
+	)
+	self.manager:addEntity(bullet)
+end
 
 function BattleshipEnemy:onHitBy(entity)
 
@@ -45,6 +61,7 @@ function BattleshipEnemy:onPilotKicked(pilot)
 end
 
 function BattleshipEnemy:update(dt)
+	self.timer:update(dt)
 	self:move(Vector(self.dx * dt), 0)
 	self.currentAnim:update(dt)
 end

@@ -41,7 +41,7 @@ function game:enter(oldState)
 	self.backgroundFar = love.graphics.newImage("data/graphics/Background 2ndary.png")
 	self.backgroundFar:setFilter("nearest", "nearest")
 
-	self.backgroundNear = love.graphics.newImage("data/graphics/Background Animation.png")
+	self.backgroundNear = love.graphics.newImage("data/graphics/Background Animation2.png")
 	self.backgroundNear:setFilter("nearest", "nearest")
 
 	self.backgroundNearGrid = Anim8.newGrid(240, 160,
@@ -49,7 +49,12 @@ function game:enter(oldState)
 	)
 
 	self.backgroundNearAnimation = Anim8.newAnimation(
-		self.backgroundNearGrid('1-3',1), 0.5
+		self.backgroundNearGrid(
+			1, 1,
+			2, 1,
+			3, 1,
+			2, 1
+		), 0.5
 	)
 
 	local gameState = self
@@ -72,9 +77,9 @@ function game:enter(oldState)
 	end)
 	Timer.addPeriodic(5, function()
 		local ship = Battleship(
-			self.player.position.x+128,
-			260,
-			-60
+			self.player.position.x+512,
+			80,
+			-100
 		)
 		self.manager:addEntity(ship)
 	end)
