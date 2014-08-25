@@ -13,7 +13,7 @@ Shotgun = Class {
 		self.ammo = 60
 		self.maxammo = 60
 		self.fireRate = 0.15
-		self.shotSound = love.audio.newSource("data/sfx/weapons/pilot_shotgun.wav", "static")
+		self.shotSound = love.audio.newSource("data/sfx/weapons/heavygun.wav", "static")
 	end
 }
 

@@ -12,7 +12,7 @@ MachineGun = Class {
 		self.maxammo = 100
 		self.fireCounter = 0
 		self.fireRate = 0.1
-		self.shotSound = love.audio.newSource("data/sfx/weapons/pilot_machinegun.wav", "static")
+		self.shotSound = love.audio.newSource("data/sfx/weapons/lightgun.wav", "static")
 	end
 }
 
