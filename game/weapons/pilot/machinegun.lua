@@ -7,8 +7,9 @@ Particle = require "game.fx.particle"
 MachineGun = Class {
 	init = function(self, player)
 		self.player = player
+		self.weapontype = "machinegun"
 		self.fireCounter = 0
-		self.fireRate = 0.12
+		self.fireRate = 0.1
 		self.shotSound = love.audio.newSource("data/sfx/weapons/pilot_machinegun.wav", "static")
 	end
 }

@@ -8,8 +8,9 @@ Sparkle = require "game.fx.sparkle"
 Launcher = Class {
 	init = function(self, player)
 		self.player = player
+		self.weapontype = "launcher"
 		self.fireCounter = 0
-		self.fireRate = 0.5
+		self.fireRate = 0.25
 		self.shotSound = love.audio.newSource("data/sfx/weapons/pilot_shotgun.wav", "static")
 	end
 }

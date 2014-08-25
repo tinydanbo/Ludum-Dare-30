@@ -29,7 +29,7 @@ Player = Class{__includes = Entity,
 		self.invuln = false
 		self.aimDirection = Vector(1, 0)
 		self.velocity = Vector(0, 0)
-		self.weapon = Shotgun(self)
+		self.weapon = MachineGun(self)
 		self.spriteGrid = Anim8.newGrid(
 			64, 64, 
 			self.spriteSheet:getWidth(), self.spriteSheet:getHeight()
@@ -355,7 +355,7 @@ function Player:onCollect(item)
 		iy,
 		0,
 		-10,
-		item.size,
+		2,
 		255,
 		255,
 		255,
@@ -363,7 +363,17 @@ function Player:onCollect(item)
 		1000
 	)
 	self.manager:addParticle(particle)
-	self.scrap = self.scrap + item.size
+	if item.size then
+		self.scrap = self.scrap + item.size
+	elseif item.itemtype then
+		if item.itemtype == 1 then
+			self.weapon = Shotgun(self)
+		elseif item.itemtype == 2 then
+			self.weapon = Launcher(self)
+		elseif item.itemtype == 3 then
+			self.scrap = self.scrap + 200
+		end
+	end
 end
 
 function Player:stopKick()

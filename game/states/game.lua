@@ -77,7 +77,7 @@ function game:enter(oldState)
 		self.manager:addEntity(popcorn)
 	end)
 	]]--
-	Timer.addPeriodic(0.5, function()
+	Timer.addPeriodic(2, function()
 		local target = self.player
 		if self.playermech.active then
 			target = self.playermech

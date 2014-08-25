@@ -4,6 +4,7 @@ Vector = require "lib.hump.vector"
 Timer = require "lib.hump.timer"
 Anim8 = require "lib.anim8"
 Entity = require "framework.entity"
+SpecialItem = require "game.items.specialitem"
 EnemyBasicBullet = require "game.projectiles.enemybullet"
 
 BallEnemy = Class{__includes = Entity,
@@ -84,6 +85,14 @@ function BallEnemy:explode()
 			math.random(4, 5)
 		)
 		self.manager:addEntity(scrap)
+	end
+	if math.random(0, 100) > 50 then
+		local specialitem = SpecialItem(
+			self.position.x+math.random(-4, 4),
+			self.position.y+math.random(-4, 4)
+		)
+		specialitem.draworder = 5
+		self.manager:addEntity(specialitem)
 	end
 	Gamestate.current():screenShake(10, self.position)
 	self:destroy()
