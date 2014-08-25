@@ -22,7 +22,7 @@ function title:handleRescale()
 end
 
 function title:keyreleased(key, code)
-	if key == "escape" then
+	if key == "escape" and self.state == 1 then
 		love.event.quit()
 	else
 		if not self.locked then

@@ -109,6 +109,9 @@ Player = Class{__includes = Entity,
 	whiteShader = love.graphics.newShader("data/shaders/white.fs"),
 	powerupSound = love.audio.newSource("data/sfx/powerup.wav", "static"),
 	deadSound = love.audio.newSource("data/sfx/playerdead.wav", "static"),
+	jumpSound = love.audio.newSource("data/sfx/pilot_jump.wav", "static"),
+	kickSound = love.audio.newSource("data/sfx/dash.wav", "static"),
+	bounceSound = love.audio.newSource("data/sfx/bounce.wav", "static")
 }
 
 function Player:updateAimDirection()
@@ -430,6 +433,8 @@ function Player:kickRecoil()
 		self.dx = self.dx * -0.2
 		self.gravity = 10
 	end
+	self.bounceSound:rewind()
+	self.bounceSound:play()
 end
 
 function Player:registerCollisionData(collider)
@@ -443,9 +448,13 @@ function Player:keypressed(key, code)
 	if (key == "x" or key == "k" or key == " ") and self.active and self.grounded then
 		self.dy = -180
 		self.grounded = false
+		self.jumpSound:rewind()
+		self.jumpSound:play()
 	elseif (key == "l" or key == "c") and self.active and not self.locked and self.kickcharge > 50 then
 		self.locked = true
 		self.gravity = 0
+		self.kickSound:rewind()
+		self.kickSound:play()
 		self.kickcharge = self.kickcharge - 50
 		if self.facingLeft then
 			self.currentAnim = self.kickLeftAnim
