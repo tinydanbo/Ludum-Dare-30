@@ -31,8 +31,8 @@ PlayerMech = Class{__includes = Entity,
 		self.dy = 0
 		self.dx = 0
 		self.armrotation = 0
-		self.maxarmrotation = 0.4
-		self.minarmrotation = -0.4
+		self.maxarmrotation = 1
+		self.minarmrotation = -1
 		self.armrotationspeed = 3
 		self.facingLeft = false
 		self.spriteGrid = Anim8.newGrid(
