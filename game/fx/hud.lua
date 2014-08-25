@@ -55,7 +55,7 @@ Hud = Class {__includes = Entity,
 	icons = love.graphics.newImage("data/graphics/hud_icons.png"),
 	hp = love.graphics.newImage("data/graphics/hud_hp.png"),
 	ammo = love.graphics.newImage("data/graphics/hud_ammo1.png"),
-	scoreFont = love.graphics.newImageFont("data/graphics/hud_font_Score.png", "1234567890"),
+	scoreFont = love.graphics.newImageFont("data/graphics/hud_font_score.png", "1234567890"),
 	whiteFont = love.graphics.newImageFont("data/graphics/hud_font_white.png", "1234567890"),
 	greyFont = love.graphics.newImageFont("data/graphics/hud_font_grey.png", "1234567890"),
 	redFont = love.graphics.newImageFont("data/graphics/hud_font_red.png", "1234567890")
