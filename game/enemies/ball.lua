@@ -48,7 +48,8 @@ BallEnemy = Class{__includes = Entity,
 
 		self.currentAnim = self.patrolLeftAnim
 	end,
-	spriteSheet = love.graphics.newImage("data/graphics/enemy_ball.png")
+	spriteSheet = love.graphics.newImage("data/graphics/enemy_ball.png"),
+	shootSound = love.audio.newSource("data/sfx/weapons/badgun.wav")
 }
 
 function BallEnemy:onHitBy(entity)
@@ -179,6 +180,9 @@ function BallEnemy:fireAtPlayer()
 		)
 		bullet.draworder = 4
 		self.manager:addEntity(bullet)
+
+		self.shootSound:rewind()
+		self.shootSound:play()
 	end
 end
 
