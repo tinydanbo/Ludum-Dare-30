@@ -175,12 +175,16 @@ function game:spawnMech(difficulty)
 		target = self.playermech
 	end
 	local mechx = target.position.x-math.random(140, 200)
-	if mechx < 16 then
-		mechx = 16
+	local mechy = target.position.y-math.random(64, 128)
+	if mechx < 32 then
+		mechx = 32
+	end
+	if mechy < 32 then
+		mechy = 32
 	end
 	local mech = MechEnemy(
 		mechx, 
-		target.position.y+math.random(-128, -64), 
+		mechy, 
 		math.random(2, 20)
 	)
 	self.manager:addEntity(mech)
@@ -240,9 +244,9 @@ function game:startWave(waveNo)
 			end
 		end)
 	elseif waveNo == 4 then
-		Timer.addPeriodic(0.8, function()
+		Timer.addPeriodic(2, function()
 			self:spawnPopcorn(math.random(2, 4))
-		end, 30
+		end, 15
 		)
 		Timer.addPeriodic(1.5, function()
 			self:spawnBallEnemy(5)
@@ -252,10 +256,10 @@ function game:startWave(waveNo)
 		end, 7)
 		Timer.addPeriodic(5, function()
 			self:spawnMech(4)
-		end, 8)
+		end, 4)
 		Timer.add(40, function()
 			self:spawnBallEnemy(5)
-			self:spawnBattleship(1)
+			-- self:spawnBattleship(1)
 			self:spawnMech(4)
 			self.waveReadyToFinish = true
 		end)
@@ -265,22 +269,22 @@ function game:startWave(waveNo)
 			end
 		end)
 	elseif waveNo == 5 then
-		Timer.addPeriodic(0.8, function()
+		Timer.addPeriodic(2, function()
 			self:spawnPopcorn(math.random(2, 4))
-		end, 45
+		end, 20
 		)
 		Timer.addPeriodic(1.5, function()
 			self:spawnBallEnemy(5)
 		end, 30)
 		Timer.addPeriodic(3, function()
 			self:spawnBattleship(3)
-		end, 18)
+		end, 8)
 		Timer.addPeriodic(5, function()
 			self:spawnMech(4)
-		end, 14)
+		end, 10)
 		Timer.add(60, function()
 			self:spawnBallEnemy(5)
-			self:spawnBattleship(1)
+			-- self:spawnBattleship(1)
 			self:spawnMech(4)
 			self.waveReadyToFinish = true
 		end)
@@ -300,12 +304,6 @@ function game:update(dt)
 	if self.waveReadyToFinish and self.manager:countEnemies() == 0 then
 		self:advanceWave()
 	end
-	print(tostring(self.waveReadyToFinish) .. 
-		", " .. 
-		tostring(self.manager:countEnemies()) ..
-		", " ..
-		tostring(self.manager.count)
-	)
 
 	if self.slowmo then
 		if self.skipFrame then

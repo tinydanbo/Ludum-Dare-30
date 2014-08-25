@@ -315,6 +315,11 @@ function Player:update(dt)
 		self:move(Vector(self.dx * dt, self.dy * dt))
 	end
 
+	if self.position.y > 1000 then
+		local positiondiff = Vector(32, 256) - self.position
+		self:move(positiondiff)
+	end
+
 	if self.scrap > 999 then
 		self.scrap = 999
 	end

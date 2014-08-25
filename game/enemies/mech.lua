@@ -4,7 +4,7 @@ Vector = require "lib.hump.vector"
 Timer = require "lib.hump.timer"
 Anim8 = require "lib.anim8"
 Entity = require "framework.entity"
-EnemyBasicBulletTwo = require "game.projectiles.enemybullet2"
+EnemyBasicBulletThree = require "game.projectiles.enemybullet3"
 
 MechEnemy = Class{__includes = Entity,
 	init = function(self, x, y, dx)
@@ -32,10 +32,23 @@ MechEnemy = Class{__includes = Entity,
 		), 0.2)
 
 		self.currentAnim = self.walkRightAnim
-
+		self.timer:addPeriodic(0.8, function()
+			self:fireBullet()
+		end)
 	end,
 	spriteSheet = love.graphics.newImage("data/graphics/enemy_mechs.png")
 }
+
+function MechEnemy:fireBullet()
+	local bullet = EnemyBasicBulletThree(
+		self,
+		self.position.x + 24,
+		self.position.y - 8 + math.random(-5, 5),
+		math.random(100, 160),
+		math.random(-1, 1)
+	)
+	self.manager:addEntity(bullet)
+end
 
 function MechEnemy:onHitBy(entity)
 	if entity.type == "playerbullet" then
