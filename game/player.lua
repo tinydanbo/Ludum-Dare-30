@@ -20,6 +20,7 @@ Player = Class{__includes = Entity,
 		self.dy = 0
 		self.dx = 0
 		self.locked = false
+		self.kickcharge = 100
 		self.health = 120
 		self.maxhealth = 120
 		self.grounded = false
@@ -152,6 +153,11 @@ function Player:update(dt)
 		self:updateAimDirection()
 	end
 	self:checkIsGrounded()
+
+	self.kickcharge = self.kickcharge + (40 * dt)
+	if self.kickcharge > 100 then
+		self.kickcharge = 100
+	end
 
 	local desiredDirection = Vector(0, 0)
 	if self.active and not self.locked then
@@ -362,9 +368,10 @@ function Player:keypressed(key, code)
 	if key == " " and self.active and self.grounded then
 		self.dy = -180
 		self.grounded = false
-	elseif (key == "l" or key == "c") and self.active and not self.locked then
+	elseif (key == "l" or key == "c") and self.active and not self.locked and self.kickcharge > 50 then
 		self.locked = true
 		self.gravity = 0
+		self.kickcharge = self.kickcharge - 50
 		if self.facingLeft then
 			self.currentAnim = self.kickLeftAnim
 			self.dx = -400
