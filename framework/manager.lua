@@ -42,28 +42,40 @@ function Manager:onCollision(dt, shape_a, shape_b, mtv_x, mtv_y)
 			shape_b.entity:onHit()
 		end
 	elseif shape_a.entity.type == "playermech" and shape_b.entity.type == "enemy" then
-		shape_b.entity:move(Vector(-mtv_x, -mtv_y))
-		shape_b.entity:onHitBy(shape_a.entity)
+		if shape_a.entity.active then
+			shape_b.entity:move(Vector(-mtv_x, -mtv_y))
+			shape_b.entity:onHitBy(shape_a.entity)
+		end
 	elseif shape_a.entity.type == "enemy" and shape_b.entity.type == "playermech" then
-		shape_a.entity:move(Vector(mtv_x, mtv_y))
-		shape_a.entity:onHitBy(shape_b.entity)
+		if shape_b.entity.active then
+			shape_a.entity:move(Vector(mtv_x, mtv_y))
+			shape_a.entity:onHitBy(shape_b.entity)
+		end
 	elseif shape_a.entity.type == "item" and shape_b.entity.type == "solid" then
 		shape_a.entity:move(Vector(mtv_x, mtv_y))
 		if mtv_y < 0 then
 			shape_a.entity:freeze()
 		end
 	elseif shape_a.entity.type == "item" and shape_b.entity.type == "player" then
-		shape_b.entity:onCollect(shape_a.entity)
-		shape_a.entity:destroy()
+		if shape_b.entity.active then
+			shape_b.entity:onCollect(shape_a.entity)
+			shape_a.entity:destroy()
+		end
 	elseif shape_a.entity.type == "player" and shape_b.entity.type == "item" then
-		shape_a.entity:onCollect(shape_b.entity)
-		shape_b.entity:destroy()
+		if shape_a.entity.active then
+			shape_a.entity:onCollect(shape_b.entity)
+			shape_b.entity:destroy()
+		end
 	elseif shape_a.entity.type == "player" and shape_b.entity.type == "enemybullet" then
-		shape_b.entity:destroy()
-		shape_a.entity:onHitBy(shape_b.entity)
+		if shape_a.entity.active and not shape_a.entity.locked then
+			shape_b.entity:destroy()
+			shape_a.entity:onHitBy(shape_b.entity)
+		end
 	elseif shape_a.entity.type == "enemybullet" and shape_b.entity.type == "player" then
-		shape_a.entity:destroy()
-		shape_b.entity:onHitBy(shape_a.entity)
+		if shape_b.entity.active and not shape_b.entity.locked then
+			shape_a.entity:destroy()
+			shape_b.entity:onHitBy(shape_a.entity)
+		end
 	elseif shape_a.entity.type == "enemybullet" and shape_b.entity.type == "solid" then
 		shape_a.entity:destroy()
 	elseif shape_a.entity.type == "player" and shape_b.entity.type == "enemy" then

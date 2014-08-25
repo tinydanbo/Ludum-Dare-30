@@ -7,6 +7,7 @@ PlayerMech = require "game.playermech"
 PopcornEnemy = require "game.enemies.popcorn"
 BallEnemy = require "game.enemies.ball"
 Hud = require "game.fx.hud"
+MechWarp = require "game.fx.mechwarp"
 
 local game = {}
 
@@ -158,9 +159,23 @@ function game:keyreleased(key, code)
 		self.player.active = not self.player.active
 		self.playermech.active = not self.playermech.active
 		if self.player.active then
+			local desiredPlayerPosition = Vector(self.playermech.position.x, self.player.position.y)
+			self.player:move(desiredPlayerPosition - self.player.position)
+			self.playermech:warpOut()
 			self.player.draworder = 4
 			self.playermech.draworder = 2
 		else
+			local desiredMechPosition = Vector(self.player.position.x, self.player.position.y)
+			self.playermech:move(desiredMechPosition - self.playermech.position)
+			self.player:warpOut()
+			self.playermech:warpIn()
+			Timer.add(0.5, function() 
+				local mechwarpeffect = MechWarp(
+					self.playermech.position.x,
+					self.playermech.position.y-8
+				)
+				self.manager:addParticle(mechwarpeffect)
+			end)
 			self.player.draworder = 2
 			self.playermech.draworder = 4
 		end

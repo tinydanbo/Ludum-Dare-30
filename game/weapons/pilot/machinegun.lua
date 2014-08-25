@@ -27,14 +27,14 @@ function MachineGun:fire()
 
 		local px, py = self.player.position:unpack()
 		local offset = self.player:getFireOffset()
-		offset = offset + Vector(math.random(-8, 8), math.random(-8, 8))
+		offset = offset + Vector(math.random(-2, 2), math.random(-2, 2))
 		local bulletVelocity = self.player.aimDirection:normalized() * 540
 
 		-- if the player is currently moving, add their velocity to that of the bullet
 		bulletVelocity = bulletVelocity + self.player.velocity
 
-		bulletVelocity.x = bulletVelocity.x + math.random(-20, 20)
-		bulletVelocity.y = bulletVelocity.y + math.random(-20, 20)
+		bulletVelocity.x = bulletVelocity.x + math.random(-40, 40)
+		bulletVelocity.y = bulletVelocity.y + math.random(-40, 40)
 
 		local bullet = PlayerBasicBullet(
 			self.player, 

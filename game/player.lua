@@ -7,6 +7,7 @@ Particle = require "game.fx.particle"
 MachineGun = require "game.weapons.pilot.machinegun"
 Shotgun = require "game.weapons.pilot.shotgun"
 Launcher = require "game.weapons.pilot.launcher"
+Sparkle = require "game.fx.sparkle"
 
 Player = Class{__includes = Entity,
 	init = function(self, x, y)
@@ -26,7 +27,7 @@ Player = Class{__includes = Entity,
 		self.invuln = false
 		self.aimDirection = Vector(1, 0)
 		self.velocity = Vector(0, 0)
-		self.weapon = Launcher(self)
+		self.weapon = MachineGun(self)
 		self.spriteGrid = Anim8.newGrid(
 			64, 64, 
 			self.spriteSheet:getWidth(), self.spriteSheet:getHeight()
@@ -244,7 +245,6 @@ function Player:update(dt)
 			boostsmoke.draworder = 1
 
 			if self.grounded then
-				print("great")
 				boostsmoke.position.y = y+8
 			end
 
@@ -282,6 +282,7 @@ function Player:getFireOffset()
 end
 
 function Player:checkIsGrounded()
+	--[[
 	local x,y = self.position:unpack()
 	local isGrounded = false
 
@@ -292,6 +293,20 @@ function Player:checkIsGrounded()
 	end
 
 	self.grounded = isGrounded
+	]]--
+end
+
+function Player:warpOut()
+	local x, y = self.position:unpack()
+	for i=1,10,1 do
+		local sparkle = Sparkle(
+			x+math.random(-4, 4),
+			y+math.random(-4, 4),
+			math.random(-30, 30),
+			math.random(-30, 30)
+		)
+		self.manager:addParticle(sparkle)
+	end
 end
 
 function Player:onGrounded()
@@ -389,7 +404,7 @@ function Player:draw()
 			love.graphics.setShader(self.whiteShader)
 		end
 	else
-		love.graphics.setColor(180, 100, 100)
+		love.graphics.setColor(180, 100, 100, 0)
 	end
 
 	local image = self.spriteSheet
@@ -417,9 +432,9 @@ function Player:draw()
 		self.currentAnim:draw(image, x+self.dx*-0.02, y+self.dy*-0.02, 0, 1, 1, 32, 32)
 		love.graphics.setColor(0, 0, 200, 200)
 		self.currentAnim:draw(image, x+self.dx*-0.01, y+self.dy*-0.01, 0, 1, 1, 32, 32)
+		love.graphics.setColor(255, 255, 255, 255)
 	end
 
-	love.graphics.setColor(255, 255, 255, 255)
 	self.currentAnim:draw(image, x, y, 0, 1, 1, 32, 32)
 
 	love.graphics.setShader()

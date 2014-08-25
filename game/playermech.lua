@@ -4,13 +4,19 @@ Timer = require "lib.hump.timer"
 Anim8 = require "lib.anim8"
 Entity = require "framework.entity"
 Particle = require "game.fx.particle"
+Gamestate = require "lib.hump.gamestate"
 VulcanCannon = require "game.weapons.mech.vulcancannon"
+SparkleLong = require "game.fx.sparklelong"
+RedShine = require "game.fx.redshine"
 
 PlayerMech = Class{__includes = Entity,
 	init = function(self, x, y)
 		Entity.init(self, x, y)
 		self.type = "playermech"
 		self.active = false
+		self.warpingIn = false
+		self.shinecounter = 0
+		self.shinerate = 0.1
 		self.locked = false
 		self.gravity = 20
 		self.movespeed = 150
@@ -19,6 +25,7 @@ PlayerMech = Class{__includes = Entity,
 		self.grounded = false
 		self.jumpchargespeed = 1000
 		self.maxjump = 500
+		self.invisible = false
 		self.dy = 0
 		self.dx = 0
 		self.facingLeft = false
@@ -67,6 +74,10 @@ PlayerMech = Class{__includes = Entity,
 		), 0.05, "pauseAtEnd")
 		self.swordLeftAnim = self.swordRightAnim:clone():flipH()
 
+		self.kneelAnim = Anim8.newAnimation(self.spriteGrid(
+			7, 2
+		), 0.5)
+
 		self.currentAnim = self.standRightAnim
 
 		self.armForwardQuad = love.graphics.newQuad(
@@ -92,6 +103,18 @@ end
 function PlayerMech:update(dt)
 	self:checkIsGrounded()
 	self.weapon:update(dt)
+
+	self.shinecounter = self.shinecounter + dt
+	if self.shinecounter > self.shinerate and not self.warpingIn then
+		self.shinecounter = 0
+		local redshine = RedShine(
+			self.position.x + math.random(-16, 16),
+			self.position.y + math.random(-32, 32),
+			math.random(-5, 5),
+			-100 + math.random(-50, 50)
+		)
+		self.manager:addParticle(redshine)
+	end
 
 	local desiredDirection = Vector(0, 0)
 	if self.active and not self.locked then
@@ -199,7 +222,7 @@ function PlayerMech:update(dt)
 		end
 	end
 
-	if self.locked then
+	if self.locked and not self.dx == 0 and not self.dy == 0 then
 		for i=1,3,1 do
 			local boostsmoke = Particle(
 				"circle",
@@ -227,6 +250,47 @@ function PlayerMech:update(dt)
 	self:move(Vector(0, (self.dy * dt)))
 
 	self.currentAnim:update(dt)
+end
+
+function PlayerMech:warpIn()
+	self.locked = true
+	self.invisible = true
+	self.warpingIn = true
+	self.currentAnim = self.kneelAnim
+	for i=0, 300, 5 do
+		Timer.add(i/100, function()
+			Gamestate.current():screenShake(2)
+		end)
+	end
+	Timer.add(0.9, function()
+		self.invisible = false
+	end)
+	for i=0,180,5 do
+		Timer.add(1.2+(i/100), function()
+			local redshine = RedShine(
+				self.position.x + math.random(-8, 8),
+				self.position.y + 16,
+				math.random(-5, 5),
+				-100 + math.random(-50, 50)
+			)
+			self.manager:addParticle(redshine)
+			Gamestate.current():screenShake(6)
+		end)
+	end
+	Timer.add(2.5, function()
+		local longspark = SparkleLong(
+			self.position.x + 6,
+			self.position.y - 6,
+			0,
+			0
+		)
+		self.manager:addParticle(longspark)
+	end)
+	Timer.add(3.2, function()
+		self.locked = false
+		Gamestate.current():screenShake(20)
+		self.warpingIn = false
+	end)
 end
 
 function PlayerMech:keyreleased(key, code)
@@ -354,14 +418,23 @@ function PlayerMech:getArmOffset()
 	return Vector(0, 0)
 end
 
+function PlayerMech:warpOut()
+
+end
+
 function PlayerMech:draw()
 	local x,y = self.position:unpack()
 
 	if self.active then
 		love.graphics.setColor(255, 255, 255)
 	else
-		love.graphics.setColor(100, 100, 180)
+		love.graphics.setColor(100, 100, 180, 0)
 	end
+
+	if self.invisible then
+		love.graphics.setColor(255, 255, 255, 0)
+	end
+
 	self.currentAnim:draw(self.spriteSheet, x, y, 0, 1, 1, 64, 64)
 
 	if not self.locked then
