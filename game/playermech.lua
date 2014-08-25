@@ -110,6 +110,10 @@ function PlayerMech:update(dt)
 	self:checkIsGrounded()
 	self.weapon:update(dt)
 
+	if not self.warpingIn and self.active and self.scrappower > 0 then
+		self.scrappower = self.scrappower - 1
+	end
+
 	self.shinecounter = self.shinecounter + dt
 	if self.shinecounter > self.shinerate and not self.warpingIn and self.active then
 		self.shinecounter = 0
@@ -280,7 +284,7 @@ function PlayerMech:update(dt)
 		end
 	end
 
-	if self.locked and not self.dx == 0 and not self.dy == 0 then
+	if self.locked then
 		for i=1,3,1 do
 			local boostsmoke = Particle(
 				"circle",

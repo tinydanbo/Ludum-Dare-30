@@ -1,7 +1,7 @@
 Class = require "lib.hump.class"
 Vector = require "lib.hump.vector"
 Entity = require "framework.entity"
-PlayerBulletImpact = require "game.fx.playerbulletimpact"
+FriendlyExplosion = require "game.projectiles.friendlyexplosion"
 
 PlayerVulcanBullet = Class {__includes = Entity,
 	init = function(self, player, x, y, dx, dy)
@@ -26,11 +26,11 @@ function PlayerVulcanBullet:registerCollisionData(collider)
 end
 
 function PlayerVulcanBullet:onHit()
-	local impact = PlayerBulletImpact(
+	local impact = FriendlyExplosion(
 		self.position.x,
 		self.position.y
 	)
-	self.manager:addParticle(impact)
+	self.manager:addEntity(impact)
 	self:destroy()
 end
 
