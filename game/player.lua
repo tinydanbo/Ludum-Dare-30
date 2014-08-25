@@ -17,7 +17,7 @@ Player = Class{__includes = Entity,
 		self.type = "player"
 		self.active = true
 		self.movespeed = 150
-		self.gravity = 10
+		self.gravity = 600
 		self.scrap = 0
 		self.dy = 0
 		self.dx = 0
@@ -287,7 +287,7 @@ function Player:update(dt)
 
 		self.velocity = desiredDirection * self.movespeed
 
-		self.dy = self.dy + self.gravity
+		self.dy = self.dy + (self.gravity * dt)
 		self:move(Vector(0, (self.dy * dt)))
 	else
 		local x, y = self.position:unpack()
@@ -314,7 +314,7 @@ function Player:update(dt)
 			self.manager:addParticle(boostsmoke)
 		end
 
-		self.dy = self.dy + ((self.gravity * 100) * dt)
+		self.dy = self.dy + (self.gravity * dt)
 		self:move(Vector(self.dx * dt, self.dy * dt))
 	end
 
@@ -421,7 +421,7 @@ end
 function Player:stopKick()
 	if self.locked then
 		self.locked = false
-		self.gravity = 10
+		self.gravity = 600
 		self.hitbox:rotate(math.rad(-90))
 		self.hitbox:scale(0.5)
 	end
@@ -431,7 +431,7 @@ function Player:kickRecoil()
 	if self.locked then
 		self.dy = -200
 		self.dx = self.dx * -0.2
-		self.gravity = 10
+		self.gravity = 600
 	end
 	self.bounceSound:rewind()
 	self.bounceSound:play()

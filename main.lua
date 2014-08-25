@@ -14,9 +14,6 @@ end
 
 function love.draw()
 	StateManager.draw()
-
-	-- love.graphics.setColor(255, 255, 255)
-	-- love.graphics.print(tostring(love.timer.getFPS( )), 10, 10)
 end
 
 function love.keyreleased(key, code)
