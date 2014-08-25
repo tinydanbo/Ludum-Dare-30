@@ -168,6 +168,8 @@ function game:keyreleased(key, code)
 
 	if self.playermech.active then
 		self.playermech:keyreleased(key, code)
+	else
+		self.player:keyreleased(key, code)
 	end
 end
 

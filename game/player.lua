@@ -16,6 +16,8 @@ Player = Class{__includes = Entity,
 		self.movespeed = 150
 		self.gravity = 10
 		self.dy = 0
+		self.dx = 0
+		self.locked = false
 		self.health = 120
 		self.maxhealth = 120
 		self.grounded = false
@@ -85,6 +87,11 @@ Player = Class{__includes = Entity,
 		), 0.1)
 		self.jumpLeftAimUpAnim = self.jumpRightAimUpAnim:clone():flipH()
 
+		self.kickRightAnim = Anim8.newAnimation(self.spriteGrid2(
+			5, 1
+		), 0.1)
+		self.kickLeftAnim = self.kickRightAnim:clone():flipH()
+
 		self.currentAnim = self.standRightAnim
 	end,
 	spriteSheet = love.graphics.newImage("data/graphics/player_pilot.png"),
@@ -139,13 +146,13 @@ end
 
 function Player:update(dt)
 	self.weapon:update(dt)
-	if self.active then
+	if self.active and not self.locked then
 		self:updateAimDirection()
 	end
 	self:checkIsGrounded()
 
 	local desiredDirection = Vector(0, 0)
-	if self.active then
+	if self.active and not self.locked then
 		if love.keyboard.isDown("a", "left") then
 			desiredDirection.x = -1
 			self.facingLeft = true
@@ -187,14 +194,14 @@ function Player:update(dt)
 		end
 	end
 
-	if love.keyboard.isDown("j", "z") and self.active then
+	if love.keyboard.isDown("j", "z") and not self.locked and self.active then
 		self.firing = true
 		self.weapon:fire()
 	else
 		self.firing = false
 	end
 
-	if not self.grounded then
+	if not self.grounded and not self.locked then
 		if self.facingLeft then
 			if self.aimDirection.y == -1 then
 				self.currentAnim = self.jumpLeftAimUpAnim
@@ -210,13 +217,43 @@ function Player:update(dt)
 		end
 	end
 
-	local movement = desiredDirection * (self.movespeed * dt)
-	self:move(movement)
+	if not self.locked then
+		local movement = desiredDirection * (self.movespeed * dt)
+		self:move(movement)
 
-	self.velocity = desiredDirection * self.movespeed
+		self.velocity = desiredDirection * self.movespeed
 
-	self.dy = self.dy + self.gravity
-	self:move(Vector(0, (self.dy * dt)))
+		self.dy = self.dy + self.gravity
+		self:move(Vector(0, (self.dy * dt)))
+	else
+		local x, y = self.position:unpack()
+		for i=1,3,1 do
+			local boostsmoke = Particle(
+				"circle",
+				x+math.random(-4, 4),
+				y+math.random(-4, 4),
+				math.random(-4, 4),
+				math.random(-4, 4),
+				math.random(1, 3),
+				200,
+				200,
+				200,
+				200,
+				200
+			)
+			boostsmoke.draworder = 1
+
+			if self.grounded then
+				print("great")
+				boostsmoke.position.y = y+8
+			end
+
+			self.manager:addParticle(boostsmoke)
+		end
+
+		self.dy = self.dy + ((self.gravity * 100) * dt)
+		self:move(Vector(self.dx * dt, self.dy * dt))
+	end
 
 	self.currentAnim:update(dt)
 end
@@ -280,6 +317,23 @@ function Player:onCollect(item)
 	self.manager:addParticle(particle)
 end
 
+function Player:stopKick()
+	if self.locked then
+		self.locked = false
+		self.gravity = 10
+		self.hitbox:rotate(math.rad(-90))
+		self.hitbox:scale(0.5)
+	end
+end
+
+function Player:kickRecoil()
+	if self.locked then
+		self.dy = -200
+		self.dx = self.dx * -0.2
+		self.gravity = 10
+	end
+end
+
 function Player:registerCollisionData(collider)
 	local x,y = self.position:unpack()
 
@@ -291,7 +345,39 @@ function Player:keypressed(key, code)
 	if key == " " and self.active and self.grounded then
 		self.dy = -180
 		self.grounded = false
+	elseif (key == "l" or key == "c") and self.active and not self.locked then
+		self.locked = true
+		self.gravity = 0
+		if self.facingLeft then
+			self.currentAnim = self.kickLeftAnim
+			self.dx = -400
+		else
+			self.currentAnim = self.kickRightAnim
+			self.dx = 400
+		end
+		if love.keyboard.isDown("up", "w") then
+			self.dy = -200
+			self.dx = self.dx * 0.5
+		elseif love.keyboard.isDown("down", "s") then
+			self.dy = 200
+			self.dx = self.dx * 0.5
+		else
+			self.dy = 0
+		end
+		self.invuln = true
+		self.hitbox:rotate(math.rad(90))
+		self.hitbox:scale(2)
+		Timer.add(0.1, function()
+			self.invuln = false
+		end)
+		Timer.add(0.5, function()
+			self:stopKick()
+		end)
 	end
+end
+
+function Player:keyreleased(key, code)
+
 end
 
 function Player:draw()
@@ -306,6 +392,8 @@ function Player:draw()
 		love.graphics.setColor(180, 100, 100)
 	end
 
+	local image = self.spriteSheet
+
 	-- "yikes"
 	if self.currentAnim == self.runRightAimUpAnim or
 		self.currentAnim == self.runLeftAimUpAnim or 
@@ -316,11 +404,23 @@ function Player:draw()
 		self.currentAnim == self.standRightAimDownAnim or
 		self.currentAnim == self.standLeftAimDownAnim or
 		self.currentAnim == self.jumpRightAimUpAnim or
-		self.currentAnim == self.jumpLeftAimUpAnim then
-		self.currentAnim:draw(self.spriteSheet2, x, y, 0, 1, 1, 32, 32)
-	else
-		self.currentAnim:draw(self.spriteSheet, x, y, 0, 1, 1, 32, 32)
+		self.currentAnim == self.jumpLeftAimUpAnim or
+		self.currentAnim == self.kickLeftAnim or
+		self.currentAnim == self.kickRightAnim then
+		image = self.spriteSheet2
 	end
+
+	if self.locked then
+		love.graphics.setColor(0, 0, 200, 100)
+		self.currentAnim:draw(image, x+self.dx*-0.04, y+self.dy*-0.04, 0, 1, 1, 32, 32)
+		love.graphics.setColor(0, 0, 200, 150)
+		self.currentAnim:draw(image, x+self.dx*-0.02, y+self.dy*-0.02, 0, 1, 1, 32, 32)
+		love.graphics.setColor(0, 0, 200, 200)
+		self.currentAnim:draw(image, x+self.dx*-0.01, y+self.dy*-0.01, 0, 1, 1, 32, 32)
+	end
+
+	love.graphics.setColor(255, 255, 255, 255)
+	self.currentAnim:draw(image, x, y, 0, 1, 1, 32, 32)
 
 	love.graphics.setShader()
 end

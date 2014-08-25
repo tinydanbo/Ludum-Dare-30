@@ -21,6 +21,7 @@ BallEnemy = Class{__includes = Entity,
 		self.timer = Timer.new()
 		self.rotationSpeed = 10
 		self.dx = dx
+		self.dy = 0
 		self.spriteGrid = Anim8.newGrid(
 			64, 64,
 			self.spriteSheet:getWidth(), self.spriteSheet:getHeight()
@@ -88,6 +89,10 @@ function BallEnemy:explode()
 	self:destroy()
 end
 
+function BallEnemy:onPilotKicked(pilot)
+	self:explode()
+end
+
 function BallEnemy:update(dt)
 	self.timer:update(dt)
 	self.elapsed = self.elapsed + dt
@@ -135,6 +140,11 @@ function BallEnemy:update(dt)
 		elseif rotationDiff > 0 then
 			self.rotation = self.rotation + (self.rotationSpeed * dt)
 		end
+	elseif self.state == "bodied" then
+		self.rotation = self.rotation + math.rad(360) * dt
+		self.dy = self.dy + (2000 * dt)
+		print(self.dy)
+		self:move(Vector(self.dx * dt, self.dy * dt))
 	end
 	self.currentAnim:update(dt)
 end
@@ -176,6 +186,8 @@ function BallEnemy:draw()
 	if self.flashDamage > 0 then
 		love.graphics.setColor(255, 0, 0, 255)
 		self.flashDamage = self.flashDamage - 1
+	elseif self.state == "bodied" then
+		love.graphics.setColor(100, 100, 100, 255)
 	else
 		love.graphics.setColor(255, 255, 255, 255)
 	end

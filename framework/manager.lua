@@ -66,6 +66,16 @@ function Manager:onCollision(dt, shape_a, shape_b, mtv_x, mtv_y)
 		shape_b.entity:onHitBy(shape_a.entity)
 	elseif shape_a.entity.type == "enemybullet" and shape_b.entity.type == "solid" then
 		shape_a.entity:destroy()
+	elseif shape_a.entity.type == "player" and shape_b.entity.type == "enemy" then
+		if shape_a.entity.locked then
+			shape_b.entity:onPilotKicked(shape_a.entity)
+			shape_a.entity:kickRecoil()
+		end
+	elseif shape_a.entity.type == "enemy" and shape_b.entity.type == "player" then
+		if shape_b.entity.locked then
+			shape_a.entity:onPilotKicked(shape_b.entity)
+			shape_b.entity:kickRecoil()
+		end
 	end
 end
 
