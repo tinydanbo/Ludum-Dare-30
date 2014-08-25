@@ -104,7 +104,8 @@ Player = Class{__includes = Entity,
 	end,
 	spriteSheet = love.graphics.newImage("data/graphics/player_pilot.png"),
 	spriteSheet2 = love.graphics.newImage("data/graphics/player_pilot_2.png"),
-	whiteShader = love.graphics.newShader("data/shaders/white.fs")
+	whiteShader = love.graphics.newShader("data/shaders/white.fs"),
+	powerupSound = love.audio.newSource("data/sfx/powerup.wav", "static")
 }
 
 function Player:updateAimDirection()
@@ -370,12 +371,15 @@ function Player:onCollect(item)
 	if item.size then
 		self.scrap = self.scrap + item.size
 	elseif item.itemtype then
+		self.powerupSound:rewind()
+		self.powerupSound:play()
 		if item.itemtype == 1 then
 			self.weapon = Shotgun(self)
 		elseif item.itemtype == 2 then
 			self.weapon = Launcher(self)
 		elseif item.itemtype == 3 then
-			self.scrap = self.scrap + 200
+			self.scrap = self.scrap + 50
+			self.health = self.health + 10
 		end
 	end
 end

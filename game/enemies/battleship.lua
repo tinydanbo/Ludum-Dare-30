@@ -94,6 +94,10 @@ function BattleshipEnemy:update(dt)
 	self.timer:update(dt)
 	self:move(Vector(self.dx * dt), 0)
 	self.currentAnim:update(dt)
+
+	if self.position.x < -256 or self.position.x > 10000 then
+		self:destroy()
+	end
 end
 
 function BattleshipEnemy:fireAtPlayer()
