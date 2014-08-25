@@ -16,8 +16,8 @@ Player = Class{__includes = Entity,
 		self.movespeed = 150
 		self.gravity = 10
 		self.dy = 0
-		self.health = 100
-		self.maxhealth = 100
+		self.health = 120
+		self.maxhealth = 120
 		self.grounded = false
 		self.firing = false
 		self.facingLeft = false

@@ -14,7 +14,7 @@ PlayerSword = Class {__includes = Entity,
 		self.firstFrame = true
 		self.particleEmitCounter = 0
 		self.particleEmitRate = 0.15
-		self.damage = 5
+		self.damage = 2
 		self.gravity = 0
 		self.decay = decay
 		self.lived = 0

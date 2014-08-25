@@ -150,7 +150,7 @@ function PlayerMech:update(dt)
 		end
 	end
 
-	if love.keyboard.isDown("z", "j") and not self.locked then
+	if love.keyboard.isDown("z", "j") and self.active and not self.locked then
 		self.weapon:fire()
 	end
 
