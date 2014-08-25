@@ -10,6 +10,7 @@ BallEnemy = require "game.enemies.ball"
 Hud = require "game.fx.hud"
 MechWarp = require "game.fx.mechwarp"
 Battleship = require "game.enemies.battleship"
+thanksState = require "game.states.thanks"
 
 local game = {}
 
@@ -111,7 +112,7 @@ function game:onPlayerDeath()
 	Timer.add(1, function()
 		love.audio.stop()
 		love.audio.rewind()
-		Gamestate.pop()
+		Gamestate.switch(thanksState)
 	end)
 end
 
