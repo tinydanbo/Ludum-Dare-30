@@ -14,7 +14,7 @@ function title:enter(oldState)
 end
 
 function title:update(dt)
-
+	Timer.update(dt)
 end
 
 function title:handleRescale()
