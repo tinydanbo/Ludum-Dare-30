@@ -61,6 +61,8 @@ function bonus:enter(oldState)
 		"See you next time!"
 	}
 
+	self.blipSound = love.audio.newSource("data/sfx/blip.wav", "static")
+
 	self.currentMessage = ""
 	self.letters = 0
 	self.desiredMessage = self.messages[1]
@@ -78,9 +80,10 @@ end
 
 function bonus:updateText()
 	if self.letters < string.len(self.desiredMessage) then
-		print("hi")
 		self.letters = self.letters + 1
 		self.currentMessage = string.sub(self.desiredMessage, 0, self.letters)
+		self.blipSound:rewind()
+		self.blipSound:play()
 	else
 		self.readyForNext = true
 	end
