@@ -1,22 +1,22 @@
 io.stdout:setvbuf("no")
 
 StateManager = require "lib.hump.gamestate"
-gameState = require "game.states.game" -- haha lol
+titleState = require "game.states.title" -- haha lol
 
-scaleFactor = 1
+scaleFactor = 3
 
 function love.load()
 	love.window.setMode(240*scaleFactor, 160*scaleFactor)
 	love.graphics.setDefaultFilter("nearest", "nearest")
 	StateManager.registerEvents({'update', 'keypressed'})
-	StateManager.switch(gameState)
+	StateManager.switch(titleState)
 end
 
 function love.draw()
 	StateManager.draw()
 
-	love.graphics.setColor(255, 255, 255)
-	love.graphics.print(tostring(love.timer.getFPS( )), 10, 10)
+	-- love.graphics.setColor(255, 255, 255)
+	-- love.graphics.print(tostring(love.timer.getFPS( )), 10, 10)
 end
 
 function love.keyreleased(key, code)
