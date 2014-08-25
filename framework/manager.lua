@@ -30,7 +30,9 @@ function Manager:onCollision(dt, shape_a, shape_b, mtv_x, mtv_y)
 		end
 		shape_a.entity:move(Vector(mtv_x, mtv_y))
 	elseif shape_a.entity.type == "playerbullet" and shape_b.entity.type == "solid" then
-		shape_a.entity:onHit(shape_b.entity)
+		if shape_a.entity.solidBullet then
+			shape_a.entity:onHit(shape_b.entity)
+		end
 	elseif shape_a.entity.type == "playerbullet" and shape_b.entity.type == "enemy" then
 		shape_b.entity:onHitBy(shape_a.entity)
 		if not shape_b.entity.burning then

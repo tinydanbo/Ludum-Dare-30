@@ -7,6 +7,7 @@ PlayerVulcanBullet = Class {__includes = Entity,
 	init = function(self, player, x, y, dx, dy)
 		Entity.init(self, x, y)
 		self.type = "playerbullet"
+		self.solidBullet = true
 		self.velocity = Vector(dx, dy)
 		self.image:setFilter("nearest", "nearest")
 		self.player = player
