@@ -34,8 +34,11 @@ MechWarp = Class {__includes = Entity,
 			self:destroy()
 		end)
 
+		self.warpSound:rewind()
+		self.warpSound:play()
 	end,
 	spriteSheet = love.graphics.newImage("data/graphics/Mech Explosion Redo.png"),
+	warpSound = love.audio.newSource("data/sfx/mechwarp_5.wav")
 }
 
 function MechWarp:update(dt)
