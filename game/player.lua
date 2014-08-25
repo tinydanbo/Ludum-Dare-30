@@ -1,6 +1,7 @@
 Class = require "lib.hump.class"
 Vector = require "lib.hump.vector"
 Timer = require "lib.hump.timer"
+Gamestate = require "lib.hump.gamestate"
 Anim8 = require "lib.anim8"
 Entity = require "framework.entity"
 Particle = require "game.fx.particle"
@@ -8,6 +9,7 @@ MachineGun = require "game.weapons.pilot.machinegun"
 Shotgun = require "game.weapons.pilot.shotgun"
 Launcher = require "game.weapons.pilot.launcher"
 Sparkle = require "game.fx.sparkle"
+
 
 Player = Class{__includes = Entity,
 	init = function(self, x, y)
@@ -152,14 +154,30 @@ function Player:onHitBy(projectile)
 
 	if self.health < 0 then
 		self.health = 0
+		self.locked = true
+		if self.facingLeft then
+			self.currentAnim = self.hurtLeftAnim
+			self.dx = 100
+		else
+			self.currentAnim = self.hurtRightAnim
+			self.dx = -100
+		end
+		self.dy = -100
+		Gamestate.current():onPlayerDeath()
 	elseif self.health < breakpoint then
 		self.health = breakpoint
 		-- stagger
 		self.locked = true
 		self.invuln = true
-		self.currentAnim = self.hurtRightAnim
+		if self.facingLeft then
+			self.currentAnim = self.hurtLeftAnim
+			self.dx = 100
+		else
+			self.currentAnim = self.hurtRightAnim
+			self.dx = -100
+		end
 		self.dy = -100
-		self.dx = -100
+		
 		Timer.add(0.5, function()
 			self.invuln = false
 		end)
@@ -293,6 +311,9 @@ function Player:update(dt)
 		self:move(Vector(self.dx * dt, self.dy * dt))
 	end
 
+	if self.scrap > 999 then
+		self.scrap = 999
+	end
 	self.currentAnim:update(dt)
 end
 

@@ -19,6 +19,8 @@ function game:enter(oldState)
 	self.manager:addEntity(self.playermech)
 	self.player = Player(32, 256)
 	self.manager:addEntity(self.player)
+	self.slowmo = false
+	self.skipFrame = false
 
 	self.playermech.player = self.player
 	self.player.draworder = 2
@@ -99,7 +101,25 @@ function game:enter(oldState)
 	end)
 end
 
+function game:onPlayerDeath()
+	self.slowmo = true
+	Timer.add(1, function()
+		love.audio.stop()
+		love.audio.rewind()
+		Gamestate.pop()
+	end)
+end
+
 function game:update(dt)
+	if self.slowmo then
+		if self.skipFrame then
+			self.skipFrame = false
+			return
+		else
+			self.skipFrame = true
+		end
+	end
+
 	self.backgroundNearAnimation:update(dt)
 
 	if self.playermech.active and self.playermech.scrappower == 0 then
