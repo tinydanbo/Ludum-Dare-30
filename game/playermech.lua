@@ -24,7 +24,7 @@ PlayerMech = Class{__includes = Entity,
 		self.jumppower = 0
 		self.weapon = VulcanCannon(self)
 		self.grounded = false
-		self.jumpchargespeed = 1000
+		self.jumpchargespeed = 1400
 		self.maxjump = 500
 		self.invisible = false
 		self.dy = 0
@@ -147,7 +147,29 @@ function PlayerMech:update(dt)
 			end
 			desiredDirection.x = desiredDirection.x * 0.1
 		else
-			if self.jumppower > 50 then
+			if self.jumppower > 400 then
+				if love.keyboard.isDown("a", "left") then
+					self.dy = self.jumppower * -1
+					self.dx = self.jumppower * -0.8
+					self.facingLeft = true
+				elseif love.keyboard.isDown("d", "right") then
+					self.dy = self.jumppower * -1
+					self.dx = self.jumppower * 0.8
+					self.facingLeft = false
+				else
+					self.dy = self.jumppower * -1
+				end
+
+				self.grounded = false
+
+				if self.facingLeft then
+					self.currentAnim = self.jumpLeftAnim
+				else
+					self.currentAnim = self.jumpRightAnim
+				end
+				self.jumppower = 0
+			elseif self.jumppower > 0 then
+				self.jumppower = 400
 				if love.keyboard.isDown("a", "left") then
 					self.dy = self.jumppower * -1
 					self.dx = self.jumppower * -0.5
@@ -167,8 +189,6 @@ function PlayerMech:update(dt)
 				else
 					self.currentAnim = self.jumpRightAnim
 				end
-				self.jumppower = 0
-			else
 				self.jumppower = 0
 			end
 		end
@@ -323,6 +343,8 @@ function PlayerMech:keyreleased(key, code)
 			self.locked = false
 			self.gravity = 20
 		end)
+	elseif key == " " and not self.locked and self.grounded then
+
 	end
 end
 
