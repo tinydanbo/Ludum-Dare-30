@@ -102,6 +102,10 @@ function Manager:onCollision(dt, shape_a, shape_b, mtv_x, mtv_y)
 				shape_b.entity:onGrounded()
 			end
 		end
+	elseif shape_a.entity.type == "enemy" and shape_b.entity.type == "solid" then
+		if shape_a.entity.solid then
+			shape_a.entity:move(Vector(mtv_x, mtv_y))
+		end
 	end
 end
 

@@ -10,6 +10,7 @@ BallEnemy = require "game.enemies.ball"
 Hud = require "game.fx.hud"
 MechWarp = require "game.fx.mechwarp"
 Battleship = require "game.enemies.battleship"
+MechEnemy = require "game.enemies.mech"
 thanksState = require "game.states.thanks"
 bonusState = require "game.states.bonus"
 WaveWarning = require "game.fx.wavewarning"
@@ -83,38 +84,6 @@ function game:enter(oldState)
 	self.mechaMusic:play()
 
 	self.clearSound = love.audio.newSource("data/sfx/gameclear.wav", "static")
-
-	--[[
-	Timer.addPeriodic(0.15, function()
-		local popcorn = PopcornEnemy(
-			self.player.position.x+128, 
-			self.player.position.y+math.random(-128, 128)
-		)
-		self.manager:addEntity(popcorn)
-	end)
-	]]--
-	--[[
-	Timer.addPeriodic(2, function()
-		local target = self.player
-		if self.playermech.active then
-			target = self.playermech
-		end
-		local ball = BallEnemy(
-			target.position.x+128, 
-			target.position.y+math.random(-24, 0), 
-			math.random(-150, -100)
-		)
-		self.manager:addEntity(ball)
-	end)
-	Timer.addPeriodic(5, function()
-		local ship = Battleship(
-			self.player.position.x+512,
-			80,
-			-100
-		)
-		self.manager:addEntity(ship)
-	end)
-	]]--
 end
 
 function game:onPlayerDeath()
@@ -161,7 +130,7 @@ function game:spawnBallEnemy(difficulty)
 		target = self.playermech
 	end
 	local ball = BallEnemy(
-		2000, 
+		target.position.x+math.random(100, 200), 
 		target.position.y+math.random(-24, 0), 
 		math.random(-150, -100)
 	)
@@ -188,12 +157,33 @@ function game:spawnPopcorn(difficulty)
 end
 
 function game:spawnBattleship(difficulty)
+	local target = self.player
+	if self.playermech.active then
+		target = self.playermech
+	end
 	local ship = Battleship(
-		2000,
+		target.position.x + math.random(100, 200),
 		80,
 		-100
 	)
 	self.manager:addEntity(ship)
+end
+
+function game:spawnMech(difficulty)
+	local target = self.player
+	if self.playermech.active then
+		target = self.playermech
+	end
+	local mechx = target.position.x-math.random(140, 200)
+	if mechx < 16 then
+		mechx = 16
+	end
+	local mech = MechEnemy(
+		mechx, 
+		target.position.y+math.random(-128, -64), 
+		math.random(2, 20)
+	)
+	self.manager:addEntity(mech)
 end
 
 function game:startWave(waveNo)
@@ -236,15 +226,65 @@ function game:startWave(waveNo)
 		Timer.addPeriodic(1.5, function()
 			self:spawnBallEnemy(5)
 		end, 14)
-		Timer.addPeriodic(4, function()
+		Timer.addPeriodic(3, function()
 			self:spawnBattleship(3)
-		end, 4)
+		end, 2)
 		Timer.add(24, function()
 			self:spawnBallEnemy(5)
 			self:spawnBattleship(1)
 			self.waveReadyToFinish = true
 		end)
 		Timer.add(50, function()
+			if self.waveNo == waveNo then
+				self.manager:destroyAllEnemies()
+			end
+		end)
+	elseif waveNo == 4 then
+		Timer.addPeriodic(0.8, function()
+			self:spawnPopcorn(math.random(2, 4))
+		end, 30
+		)
+		Timer.addPeriodic(1.5, function()
+			self:spawnBallEnemy(5)
+		end, 20)
+		Timer.addPeriodic(3, function()
+			self:spawnBattleship(3)
+		end, 7)
+		Timer.addPeriodic(5, function()
+			self:spawnMech(4)
+		end, 8)
+		Timer.add(40, function()
+			self:spawnBallEnemy(5)
+			self:spawnBattleship(1)
+			self:spawnMech(4)
+			self.waveReadyToFinish = true
+		end)
+		Timer.add(80, function()
+			if self.waveNo == waveNo then
+				self.manager:destroyAllEnemies()
+			end
+		end)
+	elseif waveNo == 5 then
+		Timer.addPeriodic(0.8, function()
+			self:spawnPopcorn(math.random(2, 4))
+		end, 45
+		)
+		Timer.addPeriodic(1.5, function()
+			self:spawnBallEnemy(5)
+		end, 30)
+		Timer.addPeriodic(3, function()
+			self:spawnBattleship(3)
+		end, 18)
+		Timer.addPeriodic(5, function()
+			self:spawnMech(4)
+		end, 14)
+		Timer.add(60, function()
+			self:spawnBallEnemy(5)
+			self:spawnBattleship(1)
+			self:spawnMech(4)
+			self.waveReadyToFinish = true
+		end)
+		Timer.add(100, function()
 			if self.waveNo == waveNo then
 				self.manager:destroyAllEnemies()
 			end
@@ -260,7 +300,12 @@ function game:update(dt)
 	if self.waveReadyToFinish and self.manager:countEnemies() == 0 then
 		self:advanceWave()
 	end
-	print(tostring(self.waveReadyToFinish) .. ", " .. tostring(self.manager:countEnemies()))
+	print(tostring(self.waveReadyToFinish) .. 
+		", " .. 
+		tostring(self.manager:countEnemies()) ..
+		", " ..
+		tostring(self.manager.count)
+	)
 
 	if self.slowmo then
 		if self.skipFrame then

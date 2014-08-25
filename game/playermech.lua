@@ -300,21 +300,24 @@ function PlayerMech:update(dt)
 	self.dy = self.dy + self.gravity
 	self:move(Vector(0, (self.dy * dt)))
 
-	local hurtboxoffset = 8
-	if self.facingLeft then
-		hurtboxoffset = hurtboxoffset * -1
-	end
+	if self.active then
+		local hurtboxoffset = 8
+		if self.facingLeft then
+			hurtboxoffset = hurtboxoffset * -1
+		end
 
-	local hurtbox = Hurtbox(
-		self,
-		self.position.x + hurtboxoffset,
-		self.position.y + 0,
-		12,
-		32,
-		0.5,
-		0.02
-	)
-	self.manager:addEntity(hurtbox)
+		local hurtbox = Hurtbox(
+			self,
+			self.position.x + hurtboxoffset,
+			self.position.y + 0,
+			12,
+			32,
+			0.5,
+			0.02
+		)
+		self.manager:addEntity(hurtbox)
+	end
+	
 	self.currentAnim:update(dt)
 end
 
@@ -393,7 +396,7 @@ function PlayerMech:keyreleased(key, code)
 			self.position.y,
 			64,
 			24,
-			1,
+			5,
 			0.3
 		)
 		hurtbox.velocity = Vector(self.dx, 0)
