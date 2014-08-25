@@ -102,6 +102,23 @@ end
 function game:update(dt)
 	self.backgroundNearAnimation:update(dt)
 
+	if self.playermech.active and self.playermech.scrappower == 0 then
+		self.player.active = not self.player.active
+		self.playermech.active = not self.playermech.active
+		self.mechaMusic:setVolume(0)
+		self.music:setVolume(1)
+		local mechwarpeffect = MechWarp(
+			self.playermech.position.x,
+			self.playermech.position.y-8
+		)
+		self.manager:addParticle(mechwarpeffect)
+		local desiredPlayerPosition = Vector(self.playermech.position.x, self.player.position.y)
+		self.player:move(desiredPlayerPosition - self.player.position)
+		self.playermech:warpOut()
+		self.player.draworder = 4
+		self.playermech.draworder = 2
+	end
+
 	if self.player.active then
 		self.desiredCameraPosition = self.player:getDesiredCameraPosition()
 	elseif self.playermech.active then
@@ -198,32 +215,23 @@ function game:keyreleased(key, code)
 		if self.player.active and self.player.scrap >= 180 then
 			self.player.active = not self.player.active
 			self.playermech.active = not self.playermech.active
-			if self.player.active then
-				self.mechaMusic:setVolume(0)
-				self.music:setVolume(1)
-				local desiredPlayerPosition = Vector(self.playermech.position.x, self.player.position.y)
-				self.player:move(desiredPlayerPosition - self.player.position)
-				self.playermech:warpOut()
-				self.player.draworder = 4
-				self.playermech.draworder = 2
-			else
-				self.mechaMusic:setVolume(1)
-				self.music:setVolume(0)
-				local desiredMechPosition = Vector(self.player.position.x, self.player.position.y)
-				self.playermech:move(desiredMechPosition - self.playermech.position)
-				self.player:warpOut()
-				self.playermech:warpIn()
-				self.playermech.scrappower = self.player.scrap
-				Timer.add(0.5, function() 
-					local mechwarpeffect = MechWarp(
-						self.playermech.position.x,
-						self.playermech.position.y-8
-					)
-					self.manager:addParticle(mechwarpeffect)
-				end)
-				self.player.draworder = 2
-				self.playermech.draworder = 4
-			end
+			self.mechaMusic:setVolume(1)
+			self.music:setVolume(0)
+			local desiredMechPosition = Vector(self.player.position.x, self.player.position.y)
+			self.playermech:move(desiredMechPosition - self.playermech.position)
+			self.player:warpOut()
+			self.playermech:warpIn()
+			self.playermech.scrappower = self.player.scrap
+			self.player.scrap = 0
+			Timer.add(0.5, function() 
+				local mechwarpeffect = MechWarp(
+					self.playermech.position.x,
+					self.playermech.position.y-8
+				)
+				self.manager:addParticle(mechwarpeffect)
+			end)
+			self.player.draworder = 2
+			self.playermech.draworder = 4
 		end
 	end
 

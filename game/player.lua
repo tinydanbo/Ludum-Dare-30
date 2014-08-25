@@ -16,7 +16,7 @@ Player = Class{__includes = Entity,
 		self.active = true
 		self.movespeed = 150
 		self.gravity = 10
-		self.scrap = 400
+		self.scrap = 0
 		self.dy = 0
 		self.dx = 0
 		self.locked = false
