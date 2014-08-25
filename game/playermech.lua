@@ -20,6 +20,7 @@ PlayerMech = Class{__includes = Entity,
 		self.locked = false
 		self.gravity = 20
 		self.movespeed = 150
+		self.scrappower = 0
 		self.jumppower = 0
 		self.weapon = VulcanCannon(self)
 		self.grounded = false
