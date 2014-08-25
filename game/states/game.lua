@@ -22,6 +22,7 @@ function game:enter(oldState)
 	self.slowmo = false
 	self.skipFrame = false
 	self.paused = false
+	self.backgroundmaskalpha = 0
 
 	self.playermech.player = self.player
 	self.player.draworder = 2
@@ -126,6 +127,10 @@ function game:update(dt)
 		else
 			self.skipFrame = true
 		end
+		self.backgroundmaskalpha = self.backgroundmaskalpha + (1000 * dt)
+		if self.backgroundmaskalpha > 255 then
+			self.backgroundmaskalpha = 255
+		end
 	end
 
 	self.backgroundNearAnimation:update(dt)
@@ -217,6 +222,8 @@ function game:draw()
 		love.graphics.scale(scaleFactor, scaleFactor)
 		love.graphics.setColor(255, 255, 255, 255)
 		self:drawBackground()
+		love.graphics.setColor(255, 255, 255, self.backgroundmaskalpha)
+		love.graphics.rectangle("fill", 0, 0, 240, 160)
 	love.graphics.pop()
 
 	self.camera:attach()

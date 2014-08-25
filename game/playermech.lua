@@ -154,7 +154,7 @@ function PlayerMech:update(dt)
 			end
 		end
 
-		if love.keyboard.isDown("j", "z", " ") then
+		if love.keyboard.isDown("x", "k", " ") then
 			if self.facingLeft then
 				self.currentAnim = self.jumpPrepareLeftAnim
 			else
@@ -239,7 +239,7 @@ function PlayerMech:update(dt)
 		self.armrotation = self.minarmrotation
 	end
 
-	if love.keyboard.isDown("x", "k") and self.active and not self.locked then
+	if love.keyboard.isDown("z", "j") and self.active and not self.locked then
 		self.weapon:fire()
 	end
 

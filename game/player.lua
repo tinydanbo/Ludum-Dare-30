@@ -107,7 +107,8 @@ Player = Class{__includes = Entity,
 	spriteSheet = love.graphics.newImage("data/graphics/player_pilot.png"),
 	spriteSheet2 = love.graphics.newImage("data/graphics/player_pilot_2.png"),
 	whiteShader = love.graphics.newShader("data/shaders/white.fs"),
-	powerupSound = love.audio.newSource("data/sfx/powerup.wav", "static")
+	powerupSound = love.audio.newSource("data/sfx/powerup.wav", "static"),
+	deadSound = love.audio.newSource("data/sfx/playerdead.wav", "static"),
 }
 
 function Player:updateAimDirection()
@@ -163,6 +164,9 @@ function Player:onHitBy(projectile)
 			self.dx = -100
 		end
 		self.dy = -100
+		love.audio.stop()
+		self.deadSound:rewind()
+		self.deadSound:play()
 		Gamestate.current():onPlayerDeath()
 	elseif self.health < breakpoint then
 		self.health = breakpoint
@@ -251,7 +255,7 @@ function Player:update(dt)
 		end
 	end
 
-	if love.keyboard.isDown("x", "k") and not self.locked and self.active then
+	if love.keyboard.isDown("z", "j") and not self.locked and self.active then
 		self.firing = true
 		self.weapon:fire()
 	else
@@ -430,7 +434,7 @@ function Player:registerCollisionData(collider)
 end
 
 function Player:keypressed(key, code)
-	if (key == "j" or key == "z" or key == " ") and self.active and self.grounded then
+	if (key == "x" or key == "k" or key == " ") and self.active and self.grounded then
 		self.dy = -180
 		self.grounded = false
 	elseif (key == "l" or key == "c") and self.active and not self.locked and self.kickcharge > 50 then
