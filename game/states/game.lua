@@ -48,7 +48,7 @@ function game:enter(oldState)
 	Timer.addPeriodic(2, function()
 		local ball = BallEnemy(
 			self.player.position.x+128, 
-			self.player.position.y+math.random(-24, 24), 
+			self.player.position.y+math.random(-24, 0), 
 			math.random(-150, -100)
 		)
 		self.manager:addEntity(ball)

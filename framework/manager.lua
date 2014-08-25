@@ -64,6 +64,8 @@ function Manager:onCollision(dt, shape_a, shape_b, mtv_x, mtv_y)
 	elseif shape_a.entity.type == "enemybullet" and shape_b.entity.type == "player" then
 		shape_a.entity:destroy()
 		shape_b.entity:onHitBy(shape_a.entity)
+	elseif shape_a.entity.type == "enemybullet" and shape_b.entity.type == "solid" then
+		shape_a.entity:destroy()
 	end
 end
 
