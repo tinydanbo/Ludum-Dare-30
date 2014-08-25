@@ -6,6 +6,7 @@ Entity = require "framework.entity"
 Explosion = require "game.fx.explosion"
 Particle = require "game.fx.particle"
 ScrapMetal = require "game.items.scrap"
+FriendlyExplosion = require "game.projectiles.friendlyexplosion"
 
 PopcornEnemy = Class{__includes = Entity,
 	init = function(self, x, y)
@@ -63,10 +64,20 @@ function PopcornEnemy:update(dt)
 		self.burningdy = self.burningdy + 10
 		self:move(Vector(self.burningdx, self.burningdy) * dt)
 	else
-		local diff = target.position + Vector(0, -32) - self.position
+		local diff = target.position - self.position
 		self:move(diff:normalized() * (self.speed * dt))
 	end
 	self.flyingAnim:update(dt)
+end
+
+function PopcornEnemy:onPilotKicked(pilot)
+	self:explode()
+	local friendlyExplosion = FriendlyExplosion(
+		self.position.x + math.random(-4, 4),
+		self.position.y + math.random(-4, 4)
+	)
+	self.manager:addEntity(friendlyExplosion)
+	return false
 end
 
 function PopcornEnemy:onHitBy(entity)
@@ -103,6 +114,7 @@ function PopcornEnemy:explode()
 	)
 	self.manager:addEntity(scrap)
 	Gamestate.current():screenShake(5, self.position)
+	Gamestate.current().score = Gamestate.current().score + 50
 	self:destroy()
 end
 

@@ -14,6 +14,7 @@ BallEnemy = Class{__includes = Entity,
 		self.speed = 80
 		self.originaly = y
 		self.draworder = 5
+		self.facingRight = false
 		self.elapsed = 0
 		self.state = "patrol"
 		self.health = 10
@@ -35,18 +36,26 @@ BallEnemy = Class{__includes = Entity,
 			3, 1,
 			2, 1
 		), 0.5)
+		self.patrolRightAnim = self.patrolLeftAnim:clone():flipH()
 
 		self.watchingLeftAnim = Anim8.newAnimation(self.spriteGrid(
 			3, 1,
 			2, 1
 		), 0.2)
+		self.watchingRightAnim = self.watchingLeftAnim:clone():flipH()
 
 		self.attackingLeftAnim = Anim8.newAnimation(self.spriteGrid(
 			4, 1,
 			3, 1
 		), 0.05)
+		self.attackingRightAnim = self.attackingLeftAnim:clone():flipH()
 
-		self.currentAnim = self.patrolLeftAnim
+		if self.dx > 0 then
+			self.currentAnim = self.patrolRightAnim
+			self.facingRight = true
+		else
+			self.currentAnim = self.patrolLeftAnim
+		end
 	end,
 	spriteSheet = love.graphics.newImage("data/graphics/enemy_ball.png"),
 	shootSound = love.audio.newSource("data/sfx/weapons/badgun.wav")
@@ -96,11 +105,13 @@ function BallEnemy:explode()
 		self.manager:addEntity(specialitem)
 	end
 	Gamestate.current():screenShake(10, self.position)
+	Gamestate.current().score = Gamestate.current().score + 5000
 	self:destroy()
 end
 
 function BallEnemy:onPilotKicked(pilot)
 	self:explode()
+	return true
 end
 
 function BallEnemy:update(dt)
@@ -109,16 +120,28 @@ function BallEnemy:update(dt)
 	local target = Gamestate.current():getActivePlayer()
 	local x,y = self.position:unpack()
 
+	if x < -200 or x > 2200 then
+		self:destroy()
+	end
+
 	if self.state == "patrol" then
 		self.desiredy = self.originaly + math.sin(math.rad(self.elapsed*90)) * 8
 		self:move(Vector(self.dx * dt, self.desiredy - self.position.y))
 
 		local difference = target.position - self.position
-		if difference:len() < 80 then
+		if difference:len() < 80 and (self.position.x > 64 and self.position.x < 1500) then
 			self.state = "watch"
-			self.currentAnim = self.watchingLeftAnim
+			if self.facingRight then
+				self.currentAnim = self.watchingRightAnim
+			else
+				self.currentAnim = self.watchingLeftAnim
+			end
 			self.timer:addPeriodic(1.6, function()
-				self.currentAnim = self.attackingLeftAnim
+				if self.facingRight then
+					self.currentAnim = self.attackingRightAnim
+				else
+					self.currentAnim = self.attackingLeftAnim
+				end
 				self.timer:add(0.1, function()
 					self:fireAtPlayer()
 				end)
@@ -129,7 +152,11 @@ function BallEnemy:update(dt)
 					self:fireAtPlayer()
 				end)
 				self.timer:add(0.4, function()
-					self.currentAnim = self.watchingLeftAnim
+					if self.facingRight then
+						self.currentAnim = self.watchingRightAnim
+					else
+						self.currentAnim = self.watchingLeftAnim
+					end
 				end)
 			end)
 		end
@@ -204,7 +231,11 @@ function BallEnemy:draw()
 	else
 		love.graphics.setColor(255, 255, 255, 255)
 	end
-	self.currentAnim:draw(self.spriteSheet, x, y, self.rotation, 1, 1, 32, 36)
+	if self.facingRight then
+		self.currentAnim:draw(self.spriteSheet, x, y, -self.rotation+math.rad(180), 1, 1, 32, 36)
+	else
+		self.currentAnim:draw(self.spriteSheet, x, y, self.rotation, 1, 1, 32, 36)
+	end
 end
 
 return BallEnemy

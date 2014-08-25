@@ -11,6 +11,8 @@ Hud = require "game.fx.hud"
 MechWarp = require "game.fx.mechwarp"
 Battleship = require "game.enemies.battleship"
 thanksState = require "game.states.thanks"
+bonusState = require "game.states.bonus"
+WaveWarning = require "game.fx.wavewarning"
 
 local game = {}
 
@@ -29,6 +31,7 @@ function game:enter(oldState)
 	self.player.draworder = 2
 	self.player.mech = self.playermech
 	self.player.draworder = 4
+	self.score = 0
 
 	self.hud = Hud(self)
 
@@ -67,6 +70,9 @@ function game:enter(oldState)
 
 	local gameState = self
 
+	self.waveReadyToFinish = true
+	self.waveNo = 0
+
 	self.music = love.audio.newSource("data/music/Qygen - Moron Lobe.ogg", "stream")
 	self.music:setLooping(true)
 	self.music:play()
@@ -75,6 +81,8 @@ function game:enter(oldState)
 	self.mechaMusic:setVolume(0)
 	self.mechaMusic:setLooping(true)
 	self.mechaMusic:play()
+
+	self.clearSound = love.audio.newSource("data/sfx/gameclear.wav", "static")
 
 	--[[
 	Timer.addPeriodic(0.15, function()
@@ -85,6 +93,7 @@ function game:enter(oldState)
 		self.manager:addEntity(popcorn)
 	end)
 	]]--
+	--[[
 	Timer.addPeriodic(2, function()
 		local target = self.player
 		if self.playermech.active then
@@ -105,6 +114,7 @@ function game:enter(oldState)
 		)
 		self.manager:addEntity(ship)
 	end)
+	]]--
 end
 
 function game:onPlayerDeath()
@@ -116,10 +126,128 @@ function game:onPlayerDeath()
 	end)
 end
 
+function game:advanceWave()
+	if self.waveNo == 5 then
+		self.waveReadyToFinish = false
+		-- game clear!!!!!
+		self.slowmo = true
+		love.audio.stop()
+		self.clearSound:rewind()
+		self.clearSound:play()
+		Timer.add(2, function()
+			Gamestate.switch(bonusState)
+		end)
+	else
+		self.waveNo = self.waveNo + 1
+		self.waveReadyToFinish = false
+		Timer.add(0.5, function()
+			local waveWarning = WaveWarning(
+				0,
+				0,
+				self.waveNo
+			)
+			waveWarning.draworder = 5
+			self.manager:addEntity(waveWarning)
+		end)
+		Timer.add(1, function()
+			self:startWave(self.waveNo)
+		end)
+	end
+end
+
+function game:spawnBallEnemy(difficulty)
+	local target = self.player
+	if self.playermech.active then
+		target = self.playermech
+	end
+	local ball = BallEnemy(
+		2000, 
+		target.position.y+math.random(-24, 0), 
+		math.random(-150, -100)
+	)
+	if math.random(0, 10) > 5 then
+		ball = BallEnemy(
+			-100, 
+			target.position.y+math.random(-24, 0), 
+			math.random(100, 150)
+		)
+	end
+	self.manager:addEntity(ball)
+end
+
+function game:spawnPopcorn(difficulty)
+	for i=0,difficulty,1 do
+		local target = self.player
+		if self.playermech.active then
+			target = self.playermech
+		end
+		local xoffset = math.random(200, 300)
+		if math.random(0, 10) > 5 then
+			xoffset = xoffset * -1
+		end
+		local popcorn = PopcornEnemy(
+			target.position.x+xoffset, 
+			target.position.y+math.random(-256, 16)
+		)
+
+		self.manager:addEntity(popcorn)
+	end
+end
+
+function game:startWave(waveNo)
+	if waveNo == 1 then
+		Timer.add(1, function()
+			self:spawnPopcorn(3)
+		end)
+		Timer.add(2, function()
+			self:spawnPopcorn(5)
+		end)
+		Timer.add(3, function()
+			self:spawnPopcorn(7)
+		end)
+		Timer.add(4, function()
+			self:spawnPopcorn(10)
+		end)
+		Timer.add(5, function()
+			self:spawnPopcorn(10)
+			self.waveReadyToFinish = true
+		end)
+		Timer.add(30, function()
+			if self.waveNo == waveNo then
+				self.manager:destroyAllEnemies()
+			end
+		end)
+	end
+	--[[
+	Timer.add(0.1, function()
+		self:spawnBallEnemy(1)
+	end)
+	Timer.add(5, function()
+		self:spawnBallEnemy(1)
+	end)
+	Timer.add(10, function()
+		self:spawnBallEnemy(1)
+	end)
+	Timer.add(10.1, function()
+		self.waveReadyToFinish = true
+	end)
+	Timer.add(15, function()
+		if self.waveNo == waveNo then
+			self.manager:destroyAllEnemies()
+		end
+	end)
+	]]--
+end
+
 function game:update(dt)
 	if self.paused then
 		return
 	end
+
+	if self.waveReadyToFinish and self.manager:countEnemies() == 0 then
+		self:advanceWave()
+	end
+	print(self.manager:countEnemies())
 
 	if self.slowmo then
 		if self.skipFrame then

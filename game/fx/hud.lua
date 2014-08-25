@@ -92,7 +92,7 @@ function Hud:draw()
 
 	local ammoProportion = self.game.player.weapon.ammo / self.game.player.weapon.maxammo
 	local pips = math.floor(ammoProportion * 16)
-	
+
 	for i=0,pips,1 do
 		love.graphics.draw(self.ammo, self.ammoPipQuad, 102+(3*i), hudy+2+2)
 	end
@@ -112,7 +112,7 @@ function Hud:draw()
 	love.graphics.draw(self.icons, self.scoreIconQuad, 160, hudy+2)
 
 	love.graphics.setFont(self.scoreFont)
-	love.graphics.print("1234567", 174, hudy+4)
+	love.graphics.print(string.format("%07d", self.game.score), 174, hudy+4)
 
 	if self.game.player.active then
 		if self.game.player.scrap > 180 then

@@ -82,12 +82,14 @@ function BattleshipEnemy:explode()
 		)
 		self.manager:addEntity(scrap)
 	end
+	Gamestate.current().score = Gamestate.current().score + 20000
 	Gamestate.current():screenShake(20, self.position)
 	self:destroy()
 end
 
 function BattleshipEnemy:onPilotKicked(pilot)
 	-- think i give a fuck
+	return true
 end
 
 function BattleshipEnemy:update(dt)

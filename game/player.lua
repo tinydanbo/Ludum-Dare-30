@@ -395,6 +395,7 @@ function Player:onCollect(item)
 	self.manager:addParticle(particle)
 	if item.size then
 		self.scrap = self.scrap + item.size
+		Gamestate.current().score = Gamestate.current().score + item.size*100
 	elseif item.itemtype then
 		self.powerupSound:rewind()
 		self.powerupSound:play()
