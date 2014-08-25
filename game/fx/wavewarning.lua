@@ -12,7 +12,7 @@ WaveWarning = Class {__includes = Entity,
 		)
 		self.spriteSheet:setFilter("nearest", "nearest")
 
-		if waveNo == 5 then
+		if waveNo == 5 and not Gamestate.current().hardmode then
 			waveNo = 10
 		end
 		

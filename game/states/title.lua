@@ -33,7 +33,11 @@ function title:keyreleased(key, code)
 					self.locked = false
 				end)
 			else
-				Gamestate.push(game)
+				if key == "p" then
+					Gamestate.push(game, true)
+				else
+					Gamestate.push(game, false)
+				end
 				self.state = 1
 				self.locked = false
 			end

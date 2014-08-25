@@ -17,7 +17,7 @@ WaveWarning = require "game.fx.wavewarning"
 
 local game = {}
 
-function game:enter(oldState)
+function game:enter(oldState, hardmode)
 	self.manager = Manager()
 	self.playermech = PlayerMech(512, 256)
 	self.manager:addEntity(self.playermech)
@@ -27,6 +27,7 @@ function game:enter(oldState)
 	self.skipFrame = false
 	self.paused = false
 	self.backgroundmaskalpha = 0
+	self.hardmode = hardmode
 
 	self.playermech.player = self.player
 	self.player.draworder = 2
@@ -84,6 +85,12 @@ function game:enter(oldState)
 	self.mechaMusic:play()
 
 	self.clearSound = love.audio.newSource("data/sfx/gameclear.wav", "static")
+
+	if self.hardmode then
+		self.warningSound = love.audio.newSource("data/sfx/lowhealthwarning.wav", "static")
+		self.warningSound:rewind()
+		self.warningSound:play()
+	end
 end
 
 function game:onPlayerDeath()
@@ -96,7 +103,7 @@ function game:onPlayerDeath()
 end
 
 function game:advanceWave()
-	if self.waveNo == 5 then
+	if (self.waveNo == 5 and not self.hardmode) or (self.waveNo == 10 and self.hardmode) then
 		self.waveReadyToFinish = false
 		-- game clear!!!!!
 		self.slowmo = true
@@ -282,6 +289,131 @@ function game:startWave(waveNo)
 		Timer.addPeriodic(5, function()
 			self:spawnMech(4)
 		end, 10)
+		Timer.add(60, function()
+			self:spawnBallEnemy(5)
+			-- self:spawnBattleship(1)
+			self:spawnMech(4)
+			self.waveReadyToFinish = true
+		end)
+		Timer.add(100, function()
+			if self.waveNo == waveNo then
+				self.manager:destroyAllEnemies()
+			end
+		end)
+	elseif waveNo == 6 then
+		Timer.addPeriodic(2, function()
+			self:spawnPopcorn(math.random(2, 4))
+		end, 20
+		)
+		Timer.addPeriodic(1.5, function()
+			self:spawnBallEnemy(5)
+		end, 30)
+		Timer.addPeriodic(3, function()
+			self:spawnBattleship(3)
+		end, 8)
+		Timer.addPeriodic(5, function()
+			self:spawnMech(4)
+		end, 6)
+		Timer.add(60, function()
+			self:spawnBallEnemy(5)
+			-- self:spawnBattleship(1)
+			self:spawnMech(4)
+			self.waveReadyToFinish = true
+		end)
+		Timer.add(100, function()
+			if self.waveNo == waveNo then
+				self.manager:destroyAllEnemies()
+			end
+		end)
+	elseif waveNo == 7 then
+		Timer.addPeriodic(2, function()
+			self:spawnPopcorn(math.random(2, 4))
+		end, 28
+		)
+		Timer.addPeriodic(1.5, function()
+			self:spawnBallEnemy(5)
+		end, 36)
+		Timer.addPeriodic(3, function()
+			self:spawnBattleship(3)
+		end, 7)
+		Timer.addPeriodic(3.8, function()
+			self:spawnMech(4)
+		end, 8)
+		Timer.add(60, function()
+			self:spawnBallEnemy(5)
+			-- self:spawnBattleship(1)
+			self:spawnMech(4)
+			self.waveReadyToFinish = true
+		end)
+		Timer.add(100, function()
+			if self.waveNo == waveNo then
+				self.manager:destroyAllEnemies()
+			end
+		end)
+	elseif waveNo == 8 then
+		Timer.addPeriodic(1.4, function()
+			self:spawnPopcorn(math.random(2, 4))
+		end, 32
+		)
+		Timer.addPeriodic(1, function()
+			self:spawnBallEnemy(5)
+		end, 40)
+		Timer.addPeriodic(2, function()
+			self:spawnBattleship(3)
+		end, 9)
+		Timer.addPeriodic(3.4, function()
+			self:spawnMech(4)
+		end, 12)
+		Timer.add(60, function()
+			self:spawnBallEnemy(5)
+			-- self:spawnBattleship(1)
+			self:spawnMech(4)
+			self.waveReadyToFinish = true
+		end)
+		Timer.add(100, function()
+			if self.waveNo == waveNo then
+				self.manager:destroyAllEnemies()
+			end
+		end)
+	elseif waveNo == 9 then
+		Timer.addPeriodic(1.2, function()
+			self:spawnPopcorn(math.random(2, 4))
+		end, 36
+		)
+		Timer.addPeriodic(0.85, function()
+			self:spawnBallEnemy(5)
+		end, 55)
+		Timer.addPeriodic(1.75, function()
+			self:spawnBattleship(3)
+		end, 12)
+		Timer.addPeriodic(3, function()
+			self:spawnMech(4)
+		end, 16)
+		Timer.add(60, function()
+			self:spawnBallEnemy(5)
+			-- self:spawnBattleship(1)
+			self:spawnMech(4)
+			self.waveReadyToFinish = true
+		end)
+		Timer.add(100, function()
+			if self.waveNo == waveNo then
+				self.manager:destroyAllEnemies()
+			end
+		end)
+	elseif waveNo == 10 then
+		Timer.addPeriodic(1, function()
+			self:spawnPopcorn(math.random(2, 4))
+		end, 40
+		)
+		Timer.addPeriodic(0.75, function()
+			self:spawnBallEnemy(5)
+		end, 60)
+		Timer.addPeriodic(1.5, function()
+			self:spawnBattleship(3)
+		end, 16)
+		Timer.addPeriodic(2.5, function()
+			self:spawnMech(4)
+		end, 20)
 		Timer.add(60, function()
 			self:spawnBallEnemy(5)
 			-- self:spawnBattleship(1)
