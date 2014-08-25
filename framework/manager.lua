@@ -8,6 +8,7 @@ Manager = Class {
 		self.entities = {}
 		self.solids = {}
 		self.count = 0
+		self.lastdt = 0
 		local man = self
 		self.collider = HC(100, function(dt, shape_a, shape_b, mtv_x, mtv_y)
 			man:onCollision(dt, shape_a, shape_b, mtv_x, mtv_y)
@@ -82,11 +83,21 @@ function Manager:onCollision(dt, shape_a, shape_b, mtv_x, mtv_y)
 		if shape_a.entity.locked then
 			shape_b.entity:onPilotKicked(shape_a.entity)
 			shape_a.entity:kickRecoil()
+		elseif shape_b.entity.solidToPlayer then
+			shape_a.entity:move(Vector(mtv_x + (shape_b.entity.dx * self.lastdt), mtv_y))
+			if mtv_y < 0 then
+				shape_a.entity:onGrounded()
+			end
 		end
 	elseif shape_a.entity.type == "enemy" and shape_b.entity.type == "player" then
 		if shape_b.entity.locked then
 			shape_a.entity:onPilotKicked(shape_b.entity)
 			shape_b.entity:kickRecoil()
+		elseif shape_a.entity.solidToPlayer then
+			shape_b.entity:move(Vector(-mtv_x + (shape_a.entity.dx * self.lastdt), -mtv_y))
+			if mtv_y > 0 then
+				shape_b.entity:onGrounded()
+			end
 		end
 	end
 end
@@ -134,6 +145,8 @@ function Manager:loadMap(filename)
 end
 
 function Manager:update(dt)
+	self.lastdt = dt
+
 	local i = 1
 	local entityTable = self.entities
 	while i <= #entityTable do

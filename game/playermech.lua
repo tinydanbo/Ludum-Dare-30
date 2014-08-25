@@ -105,7 +105,7 @@ function PlayerMech:update(dt)
 	self.weapon:update(dt)
 
 	self.shinecounter = self.shinecounter + dt
-	if self.shinecounter > self.shinerate and not self.warpingIn then
+	if self.shinecounter > self.shinerate and not self.warpingIn and self.active then
 		self.shinecounter = 0
 		local redshine = RedShine(
 			self.position.x + math.random(-16, 16),

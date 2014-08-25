@@ -9,6 +9,7 @@ PopcornEnemy = require "game.enemies.popcorn"
 BallEnemy = require "game.enemies.ball"
 Hud = require "game.fx.hud"
 MechWarp = require "game.fx.mechwarp"
+Battleship = require "game.enemies.battleship"
 
 local game = {}
 
@@ -69,11 +70,19 @@ function game:enter(oldState)
 		)
 		self.manager:addEntity(ball)
 	end)
+	Timer.addPeriodic(5, function()
+		local ship = Battleship(
+			self.player.position.x+128,
+			260,
+			-60
+		)
+		self.manager:addEntity(ship)
+	end)
 end
 
 function game:update(dt)
 	self.backgroundNearAnimation:update(dt)
-	
+
 	if self.player.active then
 		self.desiredCameraPosition = self.player:getDesiredCameraPosition()
 	elseif self.playermech.active then
