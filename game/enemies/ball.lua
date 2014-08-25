@@ -140,21 +140,27 @@ function BallEnemy:update(dt)
 end
 
 function BallEnemy:fireAtPlayer()
-	local speed = 140
-	local bulletDirection = Vector(
-		math.cos(self.rotation + math.rad(math.random(115, 125))),
-		math.sin(self.rotation + math.rad(math.random(115, 125)))
-	)
 
-	local bullet = EnemyBasicBullet(
-		self,
-		self.position.x + (bulletDirection.x * 16),
-		self.position.y + (bulletDirection.y * 16),
-		speed * bulletDirection.x,
-		speed * bulletDirection.y
-	)
-	bullet.draworder = 5
-	self.manager:addEntity(bullet)
+	local target = Gamestate.current():getActivePlayer()
+	local difference = target.position - self.position
+
+	if difference:len() < 160 then
+		local speed = 140
+		local bulletDirection = Vector(
+			math.cos(self.rotation + math.rad(math.random(115, 125))),
+			math.sin(self.rotation + math.rad(math.random(115, 125)))
+		)
+
+		local bullet = EnemyBasicBullet(
+			self,
+			self.position.x + (bulletDirection.x * 16),
+			self.position.y + (bulletDirection.y * 16),
+			speed * bulletDirection.x,
+			speed * bulletDirection.y
+		)
+		bullet.draworder = 4
+		self.manager:addEntity(bullet)
+	end
 end
 
 function BallEnemy:registerCollisionData(collider)

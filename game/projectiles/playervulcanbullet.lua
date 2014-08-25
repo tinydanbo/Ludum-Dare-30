@@ -12,7 +12,7 @@ PlayerVulcanBullet = Class {__includes = Entity,
 		self.player = player
 		self.firstFrame = true
 		self.lived = 0
-		self.lifetime = 3
+		self.lifetime = 1
 		self.damage = 2
 	end,
 	image = love.graphics.newImage("data/graphics/bullet_gatling.png"),

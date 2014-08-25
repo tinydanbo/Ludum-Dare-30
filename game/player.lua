@@ -6,6 +6,7 @@ Entity = require "framework.entity"
 Particle = require "game.fx.particle"
 MachineGun = require "game.weapons.pilot.machinegun"
 Shotgun = require "game.weapons.pilot.shotgun"
+Launcher = require "game.weapons.pilot.launcher"
 
 Player = Class{__includes = Entity,
 	init = function(self, x, y)
@@ -23,7 +24,7 @@ Player = Class{__includes = Entity,
 		self.invuln = false
 		self.aimDirection = Vector(1, 0)
 		self.velocity = Vector(0, 0)
-		self.weapon = Shotgun(self)
+		self.weapon = Launcher(self)
 		self.spriteGrid = Anim8.newGrid(
 			64, 64, 
 			self.spriteSheet:getWidth(), self.spriteSheet:getHeight()

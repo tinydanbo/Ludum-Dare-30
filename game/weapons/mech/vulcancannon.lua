@@ -62,6 +62,25 @@ function VulcanCannon:fire()
 			bulletVelocity.y
 		)
 		self.mech.manager:addEntity(bullet)
+
+		local originalOffset = self.mech:getFireOffset()
+		local shellCasing = Particle(
+			"square",
+			x + (originalOffset.x / 2) + math.random(-4, 4),
+			y + originalOffset.y,
+			bulletVelocity.x * -0.1,
+			math.random(-150, -100),
+			1,
+			255,
+			228,
+			54,
+			225,
+			0,
+			0
+		)
+		shellCasing.ddy = math.random(400, 600)
+		shellCasing.lifedecay = 0.5
+		-- self.mech.manager:addParticle(shellCasing)
 	end
 end
 

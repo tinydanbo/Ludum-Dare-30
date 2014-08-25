@@ -42,7 +42,6 @@ function PlayerShotgunBullet:update(dt)
 	self.alpha = self.alpha - (self.decay * dt)
 	if self.velocity:len() < 200 then
 		self:destroy()
-		print("hooah")
 	end
 	self:move(self.velocity * dt)
 end

@@ -12,8 +12,10 @@ Particle = Class {__includes = Entity,
 		self.g = g
 		self.b = b
 		self.a = a
+		self.ddy = 0
 		self.decay = decay
-
+		self.life = 1
+		self.lifedecay = 0
 		if sizedecay then
 			self.sizedecay = sizedecay
 		else
@@ -23,11 +25,13 @@ Particle = Class {__includes = Entity,
 }
 
 function Particle:update(dt)
+	self.velocity.y = self.velocity.y + (self.ddy * dt)
 	self.position = self.position + (self.velocity * dt)
+	self.life = self.life - (self.lifedecay * dt)
 	self.a = self.a - (self.decay * dt)
 	self.size = self.size - (self.sizedecay * dt)
 
-	if self.a < 0 or self.size < 0 then
+	if self.a < 0 or self.size < 0 or self.life < 0 then
 		self:destroy()
 	end
 end
