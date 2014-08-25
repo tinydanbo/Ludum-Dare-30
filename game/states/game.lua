@@ -4,6 +4,7 @@ Timer = require "lib.hump.timer"
 Manager = require "framework.manager"
 Player = require "game.player"
 PlayerMech = require "game.playermech"
+Anim8 = require "lib.anim8"
 PopcornEnemy = require "game.enemies.popcorn"
 BallEnemy = require "game.enemies.ball"
 Hud = require "game.fx.hud"
@@ -33,14 +34,22 @@ function game:enter(oldState)
 	self.cameraSpeed = 400
 	self.camera:zoomTo(scaleFactor)
 
-	self.backgroundSky = love.graphics.newImage("data/graphics/Background SKY STILL.png")
+	self.backgroundSky = love.graphics.newImage("data/graphics/Background SKY.png")
 	self.backgroundSky:setFilter("nearest", "nearest")
 
-	self.backgroundFar = love.graphics.newImage("data/graphics/Background 2nd STILL.png")
+	self.backgroundFar = love.graphics.newImage("data/graphics/Background 2ndary.png")
 	self.backgroundFar:setFilter("nearest", "nearest")
 
-	self.backgroundNear = love.graphics.newImage("data/graphics/Background STILL.png")
+	self.backgroundNear = love.graphics.newImage("data/graphics/Background Animation.png")
 	self.backgroundNear:setFilter("nearest", "nearest")
+
+	self.backgroundNearGrid = Anim8.newGrid(240, 160,
+		self.backgroundNear:getWidth(), self.backgroundNear:getHeight()
+	)
+
+	self.backgroundNearAnimation = Anim8.newAnimation(
+		self.backgroundNearGrid('1-3',1), 0.5
+	)
 
 	local gameState = self
 	--[[
@@ -63,6 +72,8 @@ function game:enter(oldState)
 end
 
 function game:update(dt)
+	self.backgroundNearAnimation:update(dt)
+	
 	if self.player.active then
 		self.desiredCameraPosition = self.player:getDesiredCameraPosition()
 	elseif self.playermech.active then
@@ -124,7 +135,7 @@ function game:drawBackground()
 	if nearOffset < -15 then
 		nearOffset = -15
 	end
-	love.graphics.draw(self.backgroundNear, 0, nearOffset)
+	self.backgroundNearAnimation:draw(self.backgroundNear, 0, nearOffset)
 end
 
 function game:draw()
