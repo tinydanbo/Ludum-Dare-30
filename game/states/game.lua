@@ -165,13 +165,6 @@ function game:spawnBallEnemy(difficulty)
 		target.position.y+math.random(-24, 0), 
 		math.random(-150, -100)
 	)
-	if math.random(0, 10) > 5 then
-		ball = BallEnemy(
-			-100, 
-			target.position.y+math.random(-24, 0), 
-			math.random(100, 150)
-		)
-	end
 	self.manager:addEntity(ball)
 end
 
@@ -194,22 +187,23 @@ function game:spawnPopcorn(difficulty)
 	end
 end
 
+function game:spawnBattleship(difficulty)
+	local ship = Battleship(
+		2000,
+		80,
+		-100
+	)
+	self.manager:addEntity(ship)
+end
+
 function game:startWave(waveNo)
 	if waveNo == 1 then
-		Timer.add(1, function()
-			self:spawnPopcorn(3)
-		end)
-		Timer.add(2, function()
+		Timer.addPeriodic(1, function()
+			self:spawnPopcorn(math.random(1, 3))
+		end, 8
+		)
+		Timer.add(10, function()
 			self:spawnPopcorn(5)
-		end)
-		Timer.add(3, function()
-			self:spawnPopcorn(7)
-		end)
-		Timer.add(4, function()
-			self:spawnPopcorn(10)
-		end)
-		Timer.add(5, function()
-			self:spawnPopcorn(10)
 			self.waveReadyToFinish = true
 		end)
 		Timer.add(30, function()
@@ -217,26 +211,45 @@ function game:startWave(waveNo)
 				self.manager:destroyAllEnemies()
 			end
 		end)
+	elseif waveNo == 2 then
+		Timer.addPeriodic(1, function()
+			self:spawnPopcorn(math.random(2, 4))
+		end, 16
+		)
+		Timer.addPeriodic(2, function()
+			self:spawnBallEnemy(5)
+		end, 8)
+		Timer.add(18, function()
+			self:spawnBallEnemy(5)
+			self.waveReadyToFinish = true
+		end)
+		Timer.add(30, function()
+			if self.waveNo == waveNo then
+				self.manager:destroyAllEnemies()
+			end
+		end)
+	elseif waveNo == 3 then
+		Timer.addPeriodic(0.8, function()
+			self:spawnPopcorn(math.random(2, 4))
+		end, 24
+		)
+		Timer.addPeriodic(1.5, function()
+			self:spawnBallEnemy(5)
+		end, 14)
+		Timer.addPeriodic(4, function()
+			self:spawnBattleship(3)
+		end, 4)
+		Timer.add(24, function()
+			self:spawnBallEnemy(5)
+			self:spawnBattleship(1)
+			self.waveReadyToFinish = true
+		end)
+		Timer.add(50, function()
+			if self.waveNo == waveNo then
+				self.manager:destroyAllEnemies()
+			end
+		end)
 	end
-	--[[
-	Timer.add(0.1, function()
-		self:spawnBallEnemy(1)
-	end)
-	Timer.add(5, function()
-		self:spawnBallEnemy(1)
-	end)
-	Timer.add(10, function()
-		self:spawnBallEnemy(1)
-	end)
-	Timer.add(10.1, function()
-		self.waveReadyToFinish = true
-	end)
-	Timer.add(15, function()
-		if self.waveNo == waveNo then
-			self.manager:destroyAllEnemies()
-		end
-	end)
-	]]--
 end
 
 function game:update(dt)
@@ -247,7 +260,7 @@ function game:update(dt)
 	if self.waveReadyToFinish and self.manager:countEnemies() == 0 then
 		self:advanceWave()
 	end
-	print(self.manager:countEnemies())
+	print(tostring(self.waveReadyToFinish) .. ", " .. tostring(self.manager:countEnemies()))
 
 	if self.slowmo then
 		if self.skipFrame then
