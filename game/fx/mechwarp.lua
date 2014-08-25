@@ -23,14 +23,19 @@ MechWarp = Class {__includes = Entity,
 			5, 1,
 			6, 1,
 			7, 1,
-			8, 1,
-			9, 1
-		), 0.1, function()
+			1, 2,
+			2, 2,
+			3, 2,
+			4, 2,
+			5, 2,
+			6, 2,
+			7, 2
+		), 0.075, function()
 			self:destroy()
 		end)
 
 	end,
-	spriteSheet = love.graphics.newImage("data/graphics/Mech Explosion.png"),
+	spriteSheet = love.graphics.newImage("data/graphics/Mech Explosion Redo.png"),
 }
 
 function MechWarp:update(dt)
