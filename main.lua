@@ -3,7 +3,7 @@ io.stdout:setvbuf("no")
 StateManager = require "lib.hump.gamestate"
 gameState = require "game.states.game" -- haha lol
 
-scaleFactor = 3
+scaleFactor = 1
 
 function love.load()
 	love.window.setMode(240*scaleFactor, 160*scaleFactor)

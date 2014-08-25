@@ -32,8 +32,14 @@ function game:enter(oldState)
 	self.cameraSpeed = 400
 	self.camera:zoomTo(scaleFactor)
 
-	self.background = love.graphics.newImage("data/graphics/Background WIP Test.png")
-	self.background:setFilter("nearest", "nearest")
+	self.backgroundSky = love.graphics.newImage("data/graphics/Background SKY STILL.png")
+	self.backgroundSky:setFilter("nearest", "nearest")
+
+	self.backgroundFar = love.graphics.newImage("data/graphics/Background 2nd STILL.png")
+	self.backgroundFar:setFilter("nearest", "nearest")
+
+	self.backgroundNear = love.graphics.newImage("data/graphics/Background STILL.png")
+	self.backgroundNear:setFilter("nearest", "nearest")
 
 	local gameState = self
 	--[[
@@ -102,11 +108,30 @@ function game:handleRescale(scaleFactor)
 	self.camera:zoomTo(scaleFactor)
 end
 
+function game:drawBackground()
+	local cx, cy = self.camera:pos()
+	love.graphics.setColor(255, 255, 255, 255)
+	love.graphics.draw(self.backgroundSky, 0, 0)
+
+	local farOffset = (cy-300) * -0.05
+	if farOffset < -30 then
+		farOffset = -30
+	end
+	love.graphics.draw(self.backgroundFar, 0, farOffset)
+
+	local nearOffset = (cy-250) * -0.2
+	if nearOffset < -15 then
+		nearOffset = -15
+	end
+	love.graphics.draw(self.backgroundNear, 0, nearOffset)
+end
+
 function game:draw()
+
 	love.graphics.push()
 		love.graphics.scale(scaleFactor, scaleFactor)
 		love.graphics.setColor(255, 255, 255, 255)
-		love.graphics.draw(self.background, 0, 0)
+		self:drawBackground()
 	love.graphics.pop()
 
 	self.camera:attach()
