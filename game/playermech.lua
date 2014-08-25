@@ -91,6 +91,8 @@ PlayerMech = Class{__includes = Entity,
 			128, 128, 
 			self.armSpriteSheet:getWidth(), self.armSpriteSheet:getHeight()
 		)
+
+		self.dashSound:setVolume(0.7)
 	end,
 	spriteSheet = love.graphics.newImage("data/graphics/player_mech.png"),
 	armSpriteSheet = love.graphics.newImage("data/graphics/player_mech_arm.png"),
