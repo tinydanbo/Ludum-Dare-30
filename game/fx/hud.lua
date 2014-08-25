@@ -81,7 +81,7 @@ function Hud:draw()
 	love.graphics.rectangle("fill", 102, hudy+11, 50, 1)
 
 	if self.game.player.kickcharge > 50 then
-		love.graphics.setColor(109, 109, 202, 255)
+		love.graphics.setColor(109, 194, 202, 255)
 	else
 		love.graphics.setColor(210, 125, 44, 255)
 	end

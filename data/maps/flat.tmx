@@ -3,7 +3,7 @@
  <tileset firstgid="1" source="tileset.tsx"/>
  <layer name="World" width="100" height="25">
   <data encoding="base64" compression="zlib">
-   eJztlr0KwjAUheP/ouKig1acHMQiKg4uIuLkQ6hv4BOoT+BDe0qplhBKG5Km2vPBN7Sl99wmlFwhCCGEEEIIIYQQQkhahrCjsJtzDZN1dLNs5GRlBj2F45xrmKyjm2UjJytbOFfo51zDZB3dLBs5JB1LeIu5gmunHZWbO3xIPp12VG7O8CJ5ddpRuVHNDZ7Tjn6baF7VnVH/4fxoi3ANRo7ejwj2IphXTyKcUXX2xOX5UYG1mFXpOrAOG4r7WTRRI6m3+LNoXvU1MlpwD1+SB8VamfimppTdg3368ZiwdjvL2QM4KcAa0O9+LArQBw2dCvv/IE3vBr4ByiI83A==
+   eJztlk0KwjAQRuP/RsWNLrTiyoVYRMVFNyLiykOoN/AE6gk8tFPbQAihtCFpqvkePJAW55tmKB3GAAAAAAAAAAAAAEBexmRPYb/kGibr6GbZyCnKggwUTkuuYbKObpaNnKJE5FJhWHINk3V0s2zkgHysybvghtw67chvHuRT8uW0I7+5kFfJm9OO/Ea1NwROO/pt+L6qu6P+w/ejy5IzmDj6PyeeRbyvnlmyo+rMRPf7MdbMk6mRjdS68JvbJFuK60U0USOrN/Ee31dDjYwOeSDfkkfpnFTPFCkyVT2L19pCLmdADuHXU8as9hZzR8I8ZhU4B98V57GqQD++OxfmYfM9hPncpbP4ACtoPLI=
   </data>
  </layer>
  <objectgroup name="Solids" width="100" height="25">
@@ -20,5 +20,10 @@
   <object x="672" y="176" width="112" height="48"/>
   <object x="384" y="176" width="112" height="48"/>
   <object x="112" y="176" width="112" height="48"/>
+  <object x="1584" y="0" width="16" height="320"/>
+  <object x="0" y="0" width="16" height="320"/>
+  <object x="16" y="0" width="1104" height="16"/>
+  <object x="1120" y="0" width="464" height="16"/>
+  <object x="1328" y="304" width="32" height="16"/>
  </objectgroup>
 </map>
