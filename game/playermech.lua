@@ -93,7 +93,9 @@ PlayerMech = Class{__includes = Entity,
 		)
 	end,
 	spriteSheet = love.graphics.newImage("data/graphics/player_mech.png"),
-	armSpriteSheet = love.graphics.newImage("data/graphics/player_mech_arm.png")
+	armSpriteSheet = love.graphics.newImage("data/graphics/player_mech_arm.png"),
+	landingSound = love.audio.newSource("data/sfx/mech_heavyland.wav"),
+	dashSound = love.audio.newSource("data/sfx/mech_dash.wav")
 }
 
 function PlayerMech:changeAnimation(animation, frame)
@@ -366,6 +368,8 @@ function PlayerMech:keyreleased(key, code)
 	if (key == "c" or key == "l") and not self.locked then
 		self.locked = true
 		self.gravity = 0
+		self.dashSound:rewind()
+		self.dashSound:play()
 		self.dy = 0
 		if love.keyboard.isDown("a", "left") then
 			self.dx = -400
@@ -436,6 +440,10 @@ function PlayerMech:onGrounded()
 	local x, y = self.position:unpack()
 	local poundPower = self.dy + self.dx
 
+	if poundPower > 300 then
+		self.landingSound:rewind()
+		self.landingSound:play()
+	end
 	--[[
 	if poundPower > 210 then
 		for i=0,poundPower,40 do
