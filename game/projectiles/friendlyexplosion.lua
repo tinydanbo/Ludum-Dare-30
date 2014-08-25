@@ -1,6 +1,7 @@
 Class = require "lib.hump.class"
 Vector = require "lib.hump.vector"
 Anim8 = require "lib.anim8"
+Gamestate = require "lib.hump.gamestate"
 Entity = require "framework.entity"
 
 FriendlyExplosion = Class {__includes = Entity,
@@ -28,7 +29,7 @@ FriendlyExplosion = Class {__includes = Entity,
 		), math.random(3, 5) / 100, function()
 			self:destroy()
 		end)
-
+		Gamestate.current():screenShake(5)
 	end,
 	spriteSheet = love.graphics.newImage("data/graphics/Explosion 1.png"),
 }

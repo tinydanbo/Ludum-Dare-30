@@ -77,10 +77,14 @@ function game:enter(oldState)
 		self.manager:addEntity(popcorn)
 	end)
 	]]--
-	Timer.addPeriodic(2, function()
+	Timer.addPeriodic(0.5, function()
+		local target = self.player
+		if self.playermech.active then
+			target = self.playermech
+		end
 		local ball = BallEnemy(
-			self.player.position.x+128, 
-			self.player.position.y+math.random(-24, 0), 
+			target.position.x+128, 
+			target.position.y+math.random(-24, 0), 
 			math.random(-150, -100)
 		)
 		self.manager:addEntity(ball)
