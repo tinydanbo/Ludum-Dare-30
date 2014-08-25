@@ -1,7 +1,7 @@
 io.stdout:setvbuf("no")
 
 StateManager = require "lib.hump.gamestate"
-titleState = require "game.states.title" -- haha lol
+titleState = require "game.states.bonus" -- haha lol
 
 scaleFactor = 2
 
