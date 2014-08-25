@@ -8,6 +8,7 @@ Gamestate = require "lib.hump.gamestate"
 VulcanCannon = require "game.weapons.mech.vulcancannon"
 SparkleLong = require "game.fx.sparklelong"
 RedShine = require "game.fx.redshine"
+Hurtbox = require "game.projectiles.hurtbox"
 
 PlayerMech = Class{__includes = Entity,
 	init = function(self, x, y)
@@ -270,6 +271,21 @@ function PlayerMech:update(dt)
 	self.dy = self.dy + self.gravity
 	self:move(Vector(0, (self.dy * dt)))
 
+	local hurtboxoffset = 8
+	if self.facingLeft then
+		hurtboxoffset = hurtboxoffset * -1
+	end
+
+	local hurtbox = Hurtbox(
+		self,
+		self.position.x + hurtboxoffset,
+		self.position.y + 0,
+		12,
+		32,
+		0.5,
+		0.02
+	)
+	self.manager:addEntity(hurtbox)
 	self.currentAnim:update(dt)
 end
 
@@ -338,7 +354,21 @@ function PlayerMech:keyreleased(key, code)
 				self.facingLeft = false
 			end
 		end
-		local mech = self
+		local hurtboxoffset = 16
+		if self.facingLeft then
+			hurtboxoffset = -16
+		end
+		local hurtbox = Hurtbox(
+			self,
+			self.position.x + hurtboxoffset,
+			self.position.y,
+			64,
+			24,
+			1,
+			0.3
+		)
+		hurtbox.velocity = Vector(self.dx, 0)
+		self.manager:addEntity(hurtbox)
 		Timer.add(0.3, function()
 			self.locked = false
 			self.gravity = 20
@@ -405,7 +435,7 @@ end
 function PlayerMech:registerCollisionData(collider)
 	local x,y = self.position:unpack()
 
-	self.hitbox = collider:addRectangle(x-10, y-12, 16, 30)
+	self.hitbox = collider:addRectangle(x-8, y-12, 16, 30)
 	self.hitbox.entity = self
 end
 
